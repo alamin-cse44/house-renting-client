@@ -8,6 +8,7 @@ import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
 import { getMe } from "@/services/AuthService";
 import { Button } from "@/components/ui/button";
+import ChangePasswordModal from "@/components/modules/auth/profile/ChangePasswordModal";
 
 interface IUser {
   _id: string;
@@ -27,7 +28,6 @@ export default function UserProfile() {
     return <div>Loading...</div>;
   }
 
-  console.log(user);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <Card className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
@@ -72,9 +72,7 @@ export default function UserProfile() {
           <Button className="w-full" variant="outline">
             Edit Profile
           </Button>
-          <Button className="w-full" variant="default">
-            Change Password
-          </Button>
+          <ChangePasswordModal/>
         </div>
       </Card>
     </div>

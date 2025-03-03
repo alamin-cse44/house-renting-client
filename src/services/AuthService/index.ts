@@ -68,15 +68,32 @@ export const logout = async () => {
 
 export const getMe = async () => {
   try {
-    const user = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/users/me`,
-      {
-        headers: {
-          Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
-        },
-      }
-    );
+    const user = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
+      },
+    });
 
     return user;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const changePassword = async (passInfo: FieldValues) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/auth/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
+      },
+      body: JSON.stringify(passInfo),
+    });
+
+    const result = await res.json();
+
+    return result;
   } catch (error: any) {
     return Error(error);
   }
