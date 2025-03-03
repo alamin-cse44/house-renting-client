@@ -21,7 +21,7 @@ const Navbar = () => {
   const [cartQuantity, setCartQuantity] = useState(3);
   const [isOpen, setIsOpen] = useState(false);
   const { user, setIsLoading } = useUser();
-  // console.log(user);
+  console.log("user ", user);
   const pathname = usePathname();
   const router = useRouter();
   const handleLogout = () => {
@@ -35,16 +35,17 @@ const Navbar = () => {
   const menuItems = [
     { title: "Home", link: "/" },
     { title: "Dashboard", link: "/user/dashboard" },
+    { title: "All Listings", link: "all-listings" },
+    { title: "About Us", link: "about" },
   ];
 
   return (
     <>
       {/* Main Navbar */}
       <nav className="bg-white shadow-md rounded-xl relative">
-        <div className="flex items-center justify-between px-6 py-3 container mx-auto ">
+        <div className="flex items-center justify-between px-3 py-3 container mx-auto ">
           {/* Left Section - Logo & Mobile Menu Button */}
           <div className="flex items-center space-x-2">
-            <span className="text-blue-600 text-2xl font-bold">Flowbite</span>
             <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
               {isOpen ? (
                 <X className="text-gray-600 w-6 h-6" />
@@ -52,6 +53,7 @@ const Navbar = () => {
                 <Menu className="text-gray-600 w-6 h-6" />
               )}
             </button>
+            <span className="text-blue-600 text-2xl font-bold text-center">BasaFinder</span>
           </div>
 
           {/* Desktop Menu */}
@@ -146,7 +148,7 @@ const Navbar = () => {
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between p-4 border-b">
-          <span className="text-blue-600 text-2xl font-bold">Flowbite</span>
+          <span className="text-blue-600 text-2xl font-bold">BasaFinder</span>
           <button onClick={() => setIsOpen(false)}>
             <X className="text-gray-600 w-6 h-6" />
           </button>

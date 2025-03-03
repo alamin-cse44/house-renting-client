@@ -6,7 +6,8 @@ type Role = keyof typeof roleBasedPrivateRoutes;
 const authRoutes = ["/login", "/register"];
 
 const roleBasedPrivateRoutes = {
-  user: [/^\/user/, /^\/create-shop/],
+  landLord: [/^\/landLord/, /^\/create-shop/],
+  tenant: [/^\/tenant/],
   admin: [/^\/admin/],
 };
 
@@ -14,6 +15,7 @@ export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
 
   const userInfo = await getCurrentUser();
+  console.log("user info", userInfo)
 
   if (!userInfo) {
     if (authRoutes.includes(pathname)) {
@@ -28,8 +30,8 @@ export const middleware = async (request: NextRequest) => {
     }
   }
 
-  if (userInfo?.role && roleBasedPrivateRoutes[userInfo?.role as Role]) {
-    const routes = roleBasedPrivateRoutes[userInfo?.role as Role];
+  if (userInfo?.userRole && roleBasedPrivateRoutes[userInfo?.userRole as Role]) {
+    const routes = roleBasedPrivateRoutes[userInfo?.userRole as Role];
     if (routes.some((route) => pathname.match(route))) {
       return NextResponse.next();
     }

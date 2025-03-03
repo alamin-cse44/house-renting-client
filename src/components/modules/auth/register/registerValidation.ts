@@ -8,6 +8,8 @@ export const registrationSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
     .email("Invalid email address"),
+  // image: z
+  //   .string({ required_error: "Email is required" }),
   phone: z
     .string({ required_error: "Phone number is required" })
     .regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),

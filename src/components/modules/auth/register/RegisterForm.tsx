@@ -23,8 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+import NMImageUploader from "@/components/ui/core/NMImageUploader";
+import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer";
 
 const RegisterForm = () => {
+  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
+  const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+
   const form = useForm({
     resolver: zodResolver(registrationSchema),
   });
@@ -38,14 +44,31 @@ const RegisterForm = () => {
   //   console.log(password, passwordConfirm);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const phoneNumber = "+880 "+data.phone;
-    const test = {
+    // const formData = new FormData();
+    // console.log("formData", formData);
+    // formData.append("file", data.image[0]);
+    // formData.append("upload_preset", "first_preset_name");
+    // formData.append("cloud_name", `${process.env.NEXT_PUBLIC_CLOUD_NAME}`);
+
+    // try {
+    //   const response = await fetch(
+    //     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
+    //     {
+    //       method: "POST",
+    //       body: formData,
+    //     }
+    //   );
+    //   const img_result = await response.json();
+    //   console.log("image response: ", img_result.url);
+    // } catch (error) {}
+
+    const modifiedData = {
       ...data,
-      phone: "+880 "+data.phone
-    }
-    console.log(test)
+      phone: "+880 " + data.phone,
+    };
+
     try {
-      const res = await registerUser(data);
+      const res = await registerUser(modifiedData);
       console.log("res", res);
       if (res.success) {
         toast.success(res?.message);
@@ -58,7 +81,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
+    <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5 mx-2 mt-10">
       <div className="text-center">
         <h1 className="text-xl font-semibold my-2">Register</h1>
         <p className="font-extralight text-sm text-gray-600">
@@ -67,6 +90,23 @@ const RegisterForm = () => {
       </div>
       <Form {...form}>
         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+          {/* {imagePreview.length > 0 ? (
+            <ImagePreviewer
+              setImageFiles={setImageFiles}
+              imagePreview={imagePreview}
+              setImagePreview={setImagePreview}
+              className="mt-8"
+            />
+          ) : (
+            <div className="mt-8">
+              <NMImageUploader
+                setImageFiles={setImageFiles}
+                setImagePreview={setImagePreview}
+                label="Upload Profile"
+              />
+            </div>
+          )} */}
+
           <FormField
             control={form.control}
             name="name"
@@ -112,7 +152,6 @@ const RegisterForm = () => {
                 <FormControl>
                   <Input
                     placeholder="1643530000"
-                    defaultValue={"+880 "}
                     {...field}
                     value={field.value || ""}
                   />
