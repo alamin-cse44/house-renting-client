@@ -9,8 +9,6 @@ const Footer = () => {
         <Link href="/blog">Blog</Link>
         <Link href="/jobs">Jobs</Link>
         <Link href="/press">Press</Link>
-        <Link href="/accessibility">Accessibility</Link>
-        <Link href="/partners">Partners</Link>
       </nav>
       <div className="flex space-x-4 my-4">
         <Link href="https://facebook.com" target="_blank"><FaFacebook size={20} /></Link>
