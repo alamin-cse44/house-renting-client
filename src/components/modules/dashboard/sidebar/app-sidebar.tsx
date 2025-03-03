@@ -10,6 +10,7 @@ import {
   Send,
   Settings,
   SquareTerminal,
+  Users,
 } from "lucide-react";
 
 import {
@@ -32,6 +33,12 @@ const data = {
       title: "Dashboard",
       url: "/profile",
       icon: SquareTerminal,
+      isActive: true,
+    },
+    {
+      title: "Users",
+      url: "/admin/users",
+      icon: Users,
       isActive: true,
     },
     {
