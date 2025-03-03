@@ -18,13 +18,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/context/UserContext";
 import { changePassword } from "@/services/AuthService";
+import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const ChangePasswordModal = () => {
+  const [open, setOpen] = useState(false);
   const { user } = useUser();
 
-  console.log("change passs", user);
   const form = useForm();
   const {
     formState: { isSubmitting },
@@ -40,6 +41,7 @@ const ChangePasswordModal = () => {
       console.log(res);
       if (res?.success) {
         toast.success(res?.message);
+        setOpen(false);
       } else {
         toast.error(res?.message);
       }
@@ -49,9 +51,11 @@ const ChangePasswordModal = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">Change Password</Button>
+        <Button onClick={() => setOpen(true)} className="w-full">
+          Change Password
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

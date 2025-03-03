@@ -9,20 +9,23 @@ import { useEffect, useState } from "react";
 import { getMe } from "@/services/AuthService";
 import { Button } from "@/components/ui/button";
 import ChangePasswordModal from "@/components/modules/auth/profile/ChangePasswordModal";
-
-interface IUser {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-  role: "admin" | "landLord" | "tenant";
-  isBlocked: boolean;
-  image: string;
-}
+import { IUserDetails } from "@/types";
 
 export default function UserProfile() {
+  const [myProfile, setMyProfile] = useState<IUserDetails | null>(null);
   const { user, isLoading } = useUser();
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      const me = await getMe();
+    //   console.log("me", me);
+      setMyProfile(me?.data);
+    };
+
+    fetchMe();
+  }, [user?.userId]);
+
+  console.log(myProfile);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -34,34 +37,34 @@ export default function UserProfile() {
         <CardHeader className="flex flex-col items-center">
           <Avatar className="w-24 h-24 border-2 border-gray-300">
             <AvatarImage
-              src={user?.image || "/default-avatar.png"}
+              src={myProfile?.image || "/default-avatar.png"}
               alt="User Avatar"
             />
-            <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback>{myProfile?.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <CardTitle className="text-xl font-semibold mt-3">
-            {user?.name}
+            {myProfile?.name}
           </CardTitle>
           <Badge
-            variant={user?.isBlocked ? "destructive" : "default"}
+            variant={myProfile?.isBlocked ? "destructive" : "default"}
             className="mt-2"
           >
-            {user?.isBlocked ? "Blocked" : "Active"}
+            {myProfile?.isBlocked ? "Blocked" : "Active"}
           </Badge>
         </CardHeader>
         <Separator />
         <CardContent className="mt-4 space-y-3 text-gray-700">
           <div className="flex justify-between">
             <span className="font-medium">Email:</span>
-            <span>{user?.userEmail}</span>
+            <span>{myProfile?.email}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-medium">Phone:</span>
-            <span>{user?.phone}</span>
+            <span>{myProfile?.phone}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-medium">Role:</span>
-            <Badge variant="outline">{user?.userRole}</Badge>
+            <Badge variant="outline">{myProfile?.role}</Badge>
           </div>
         </CardContent>
 
@@ -72,7 +75,7 @@ export default function UserProfile() {
           <Button className="w-full" variant="outline">
             Edit Profile
           </Button>
-          <ChangePasswordModal/>
+          <ChangePasswordModal />
         </div>
       </Card>
     </div>

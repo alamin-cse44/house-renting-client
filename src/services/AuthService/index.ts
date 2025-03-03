@@ -74,7 +74,9 @@ export const getMe = async () => {
       },
     });
 
-    return user;
+    const result = await user.json();
+
+    return result;
   } catch (error: any) {
     return Error(error);
   }
