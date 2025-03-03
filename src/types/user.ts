@@ -1,10 +1,11 @@
 export interface IUser {
   userId: string;
   name: string;
-  email: string;
-  hasShop?: boolean;
-  isActive?: boolean;
-  role: "user" | "admin";
+  phone: string;
+  userEmail: string;
+  isBlocked?: boolean;
+  userRole: "landLord" | "tenant" | "admin";
+  image?: string;
   iat?: number;
   exp?: number;
 }

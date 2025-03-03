@@ -34,7 +34,7 @@ const Navbar = () => {
 
   const menuItems = [
     { title: "Home", link: "/" },
-    { title: "Dashboard", link: "/user/dashboard" },
+    { title: "Dashboard", link: "/profile" },
     { title: "All Listings", link: "all-listings" },
     { title: "About Us", link: "about" },
   ];
@@ -110,7 +110,7 @@ const Navbar = () => {
                     </Avatar>
                   </PopoverTrigger>
                   <PopoverContent className="w-48 p-2 bg-white shadow-md rounded-md">
-                    <Link href={"/user/dashboard"}>
+                    <Link href={"/profile"}>
                       <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                         Profile
                       </button>

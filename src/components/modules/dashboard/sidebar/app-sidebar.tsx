@@ -30,7 +30,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/user/dashboard",
+      url: "/profile",
       icon: SquareTerminal,
       isActive: true,
     },
@@ -106,10 +106,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <div className="flex items-center justify-center">
-                  {/* <Logo /> */} Logo
+                  {/* <Logo /> */} 
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <h2 className="font-bold text-xl">NextMart</h2>
+                  <h2 className="font-bold text-xl">BasaFinder</h2>
                 </div>
               </Link>
             </SidebarMenuButton>
