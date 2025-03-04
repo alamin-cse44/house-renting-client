@@ -8,6 +8,7 @@ const AllUsers = async() => {
     return (
         <div>
             <ManageUsers users={data} />
+            {/* <ManageUsers /> */}
         </div>
     );
 };

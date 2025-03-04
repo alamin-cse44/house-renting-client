@@ -37,6 +37,7 @@ const EditProfileModal = () => {
   } = form;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log("data", data)
     const editInfo = {
       name: data?.name ? data.name : user?.name,
       email: data?.email ? data.email : user?.userEmail,

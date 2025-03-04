@@ -7,19 +7,20 @@ import { Separator } from "@/components/ui/separator";
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
 import { getMe } from "@/services/AuthService";
-import { Button } from "@/components/ui/button";
 import ChangePasswordModal from "@/components/modules/auth/profile/ChangePasswordModal";
 import { IUserDetails } from "@/types";
 import EditProfileModal from "@/components/modules/auth/profile/EditProfileModal";
 
 export default function UserProfile() {
   const [myProfile, setMyProfile] = useState<IUserDetails | null>(null);
+  const [loading, setLoading] = useState(false);
   const { user, isLoading } = useUser();
 
   useEffect(() => {
     const fetchMe = async () => {
+      setLoading(true);
       const me = await getMe();
-      console.log("me", me);
+      setLoading(false);
       setMyProfile(me?.data);
     };
 
@@ -28,7 +29,7 @@ export default function UserProfile() {
 
   console.log(myProfile);
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <div>Loading...</div>;
   }
 
