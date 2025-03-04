@@ -1,12 +1,12 @@
 import {
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPhone,
   FaFacebookF,
   FaTwitter,
-  FaInstagram,
-  FaGoogle,
   FaLinkedin,
 } from "react-icons/fa";
-import { FaMapMarkerAlt, FaEnvelope, FaPhone } from "react-icons/fa";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 const ContactSection = () => {
   return (
