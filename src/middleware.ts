@@ -7,8 +7,8 @@ const authRoutes = ["/login", "/register"];
 
 const roleBasedPrivateRoutes = {
   landLord: [/^\/landLord/, /^\/create-shop/],
-  tenant: [/^\/tenant/],
-  admin: [/^\/admin/],
+  tenant: [/^\/tenant/, /^\/profile/],
+  admin: [/^\/admin/, /^\/profile/],
 };
 
 export const middleware = async (request: NextRequest) => {
@@ -43,6 +43,7 @@ export const middleware = async (request: NextRequest) => {
 export const config = {
   matcher: [
     "/login",
+    "/profile",
     "/create-shop",
     "/admin",
     "/admin/:page",

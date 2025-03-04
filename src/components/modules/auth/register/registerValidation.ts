@@ -21,3 +21,21 @@ export const registrationSchema = z.object({
     .string({ required_error: "Password Confirmation is required" })
     .min(1),
 });
+
+export const editUserSchema = z.object({
+  name: z
+    .string({ required_error: "Name is required" })
+    .min(2, "Name must be between 2 and 50 characters")
+    .max(50, "Name must be between 2 and 50 characters")
+    .optional(),
+  email: z
+    .string({ required_error: "Email is required" })
+    .email("Invalid email address")
+    .optional(),
+  // image: z
+  //   .string({ required_error: "Email is required" }),
+  phone: z
+    .string({ required_error: "Phone number is required" })
+    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .optional(),
+});

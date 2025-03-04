@@ -10,6 +10,7 @@ import { getMe } from "@/services/AuthService";
 import { Button } from "@/components/ui/button";
 import ChangePasswordModal from "@/components/modules/auth/profile/ChangePasswordModal";
 import { IUserDetails } from "@/types";
+import EditProfileModal from "@/components/modules/auth/profile/EditProfileModal";
 
 export default function UserProfile() {
   const [myProfile, setMyProfile] = useState<IUserDetails | null>(null);
@@ -18,7 +19,7 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchMe = async () => {
       const me = await getMe();
-    //   console.log("me", me);
+      console.log("me", me);
       setMyProfile(me?.data);
     };
 
@@ -72,9 +73,7 @@ export default function UserProfile() {
 
         {/* Action Buttons */}
         <div className="flex gap-2 mt-4">
-          <Button className="w-full" variant="outline">
-            Edit Profile
-          </Button>
+          <EditProfileModal />
           <ChangePasswordModal />
         </div>
       </Card>
