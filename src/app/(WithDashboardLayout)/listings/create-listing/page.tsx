@@ -18,14 +18,18 @@ import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer"
 import { toast } from "sonner";
 import { createShop } from "@/services/Shop";
 import { useUser } from "@/context/UserContext";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { listingValidationSchema } from "@/components/modules/listing/ListingValidation";
 
 export default function CreateListingForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
-  const form = useForm();
+  const form = useForm({
+    resolver: zodResolver(listingValidationSchema),
+  });
 
   const { user, setIsLoading } = useUser();
-  console.log("user", user)
+  console.log("user", user);
 
   const {
     formState: { isSubmitting },
@@ -36,7 +40,9 @@ export default function CreateListingForm() {
 
     const modifiedData = {
       ...data,
-      landLord: user?.userId
+      landLord: user?.userId,
+      price: Number(data?.price),
+      bedrooms: Number(data?.bedrooms),
     };
 
     console.log("modifiedData: ", modifiedData);
