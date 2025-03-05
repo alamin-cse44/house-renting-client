@@ -1,7 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { FieldValues } from "react-hook-form";
 
 interface Role {
   role: string;
@@ -49,7 +49,7 @@ export const updateUserRole = async (id: string, role: Role) => {
     );
 
     const result = await res.json();
-
+    revalidatePath("/admin/users");
     return result;
   } catch (error: any) {
     return Error(error);
@@ -72,6 +72,7 @@ export const blockUser = async (id: string) => {
 
     const result = await res.json();
 
+    revalidatePath("/admin/users");
     return result;
   } catch (error: any) {
     return Error(error);

@@ -41,34 +41,34 @@ const UsersTable = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
+  const fetchUsers = async () => {
+    setLoading(true); // Show loader before fetching
+
+    try {
+      const queryParams: Record<string, string> = {};
+      if (search) queryParams.search = search;
+      if (role && role !== "") queryParams.role = role;
+      if (status && status !== "") queryParams.isBlocked = status;
+      if (pageSize) queryParams.limit = pageSize.toString();
+      if (pageIndex) queryParams.page = pageIndex.toString();
+
+      const query = new URLSearchParams(queryParams).toString();
+      router.push(`${pathname}?${query}`);
+
+      const res = await getAllUsers(query);
+
+      if (!res) throw new Error("Failed to fetch users");
+      console.log(res);
+
+      setUsers(res?.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false); // Hide loader after fetching
+    }
+  };
   // Fetch users
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true); // Show loader before fetching
-
-      try {
-        const queryParams: Record<string, string> = {};
-        if (search) queryParams.search = search;
-        if (role && role !== "") queryParams.role = role;
-        if (status && status !== "") queryParams.isBlocked = status;
-        if (pageSize) queryParams.limit = pageSize.toString();
-        if (pageIndex) queryParams.page = pageIndex.toString();
-
-        const query = new URLSearchParams(queryParams).toString();
-        router.push(`${pathname}?${query}`);
-        const res = await getAllUsers(query);
-
-        if (!res) throw new Error("Failed to fetch users");
-        console.log(res);
-
-        setUsers(res?.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false); // Hide loader after fetching
-      }
-    };
-
     fetchUsers();
   }, [search, role, status, pageSize, pageIndex]);
 
@@ -95,7 +95,7 @@ const UsersTable = () => {
         const res = await blockUser(selectedId);
         console.log(res);
         if (res.success) {
-          router.refresh();
+          fetchUsers();
           toast.success(res.message);
           setModalOpen(false);
         } else {
@@ -118,7 +118,7 @@ const UsersTable = () => {
         const res = await updateUserRole(userId, roleInfo);
         console.log(res);
         if (res.success) {
-          router.refresh();
+          fetchUsers();
           toast.success(res.message);
         } else {
           toast.error(res.message);
