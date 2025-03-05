@@ -8,10 +8,10 @@ interface Role {
   role: string;
 }
 
-export const getAllUsers = async (query: any) => {
+export const getAllListings = async (query: any) => {
   try {
     const user = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/users?${query}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/admin/listings?${query}`,
       {
         method: "GET",
         cache: "no-store",
@@ -32,58 +32,34 @@ export const getAllUsers = async (query: any) => {
   }
 };
 
-export const updateUserRole = async (id: string, role: Role) => {
-  console.log("server role", role);
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/users/${id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${
-            (await cookies()).get("accessToken")!.value
-          }`,
-        },
-        body: JSON.stringify(role),
-      }
-    );
-
-    const result = await res.json();
-    revalidatePath("/admin/users");
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
-export const blockUser = async (id: string) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/user/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${
-            (await cookies()).get("accessToken")!.value
-          }`,
-        },
-      }
-    );
-
-    const result = await res.json();
-
-    revalidatePath("/admin/users");
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
-export const getSingleListingsByAdmin = async (id: string) => {
+export const getAllListingsById = async (query: any) => {
   try {
     const user = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/listings?${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings?${query}`,
+      {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const result = await user.json();
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const getSingleListingsByLandlord = async (id: string) => {
+  try {
+    const user = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings?${id}`,
       {
         method: "GET",
         cache: "no-store",
@@ -103,13 +79,13 @@ export const getSingleListingsByAdmin = async (id: string) => {
   }
 };
 
-export const updateListingByAdmin = async (
+export const updateListingByLandlord = async (
   id: string,
   updatedInfo: FieldValues
 ) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/listings/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings/${id}`,
       {
         method: "PATCH",
         headers: {
@@ -130,10 +106,10 @@ export const updateListingByAdmin = async (
   }
 };
 
-export const deleteListingByAdmin = async (id: string) => {
+export const deleteListingByLandlord = async (id: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/listings/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings/${id}`,
       {
         method: "DELETE",
         headers: {
