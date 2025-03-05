@@ -1,6 +1,5 @@
 "use client";
 
-import DataTable from "@/components/ui/core/DataTable";
 import { NMTable } from "@/components/ui/core/NMTable";
 import { IUserDetails } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -124,8 +123,7 @@ const ManageUsers = ({ users }: { users: IUserDetails[] }) => {
   return (
     <div>
       <h1>Manage users</h1>
-      {/* <NMTable data={users} columns={columns} /> */}
-      <DataTable data={users} columns={columns} />
+      <NMTable data={users} columns={columns} />
     </div>
   );
 };

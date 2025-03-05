@@ -2,11 +2,14 @@
 
 import { cookies } from "next/headers";
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (query:any) => {
   try {
-    const user = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/admin/users`, {
+    const user = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/admin/users?${query}`, {
+      method: 'GET',
+      cache: "no-store",
       headers: {
         Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
+        "Content-Type": "application/json",
       },
     });
 
