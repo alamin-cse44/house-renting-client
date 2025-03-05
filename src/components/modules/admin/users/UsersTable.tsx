@@ -19,7 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IUserDetails } from "@/types";
-import { getAllUsers } from "@/services/AdminService";
+import {
+  blockUser,
+  getAllUsers,
+  updateUserRole,
+} from "@/services/AdminService";
+import { toast } from "sonner";
+import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
 
 const UsersTable = () => {
   const router = useRouter();
@@ -31,6 +37,9 @@ const UsersTable = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   // Fetch users
   useEffect(() => {
@@ -73,23 +82,51 @@ const UsersTable = () => {
   }, [users, pageIndex, pageSize]);
 
   // Handle delete
-  const handleDelete = async (userId: string) => {
-    await fetch("/api/users", {
-      method: "DELETE",
-      body: JSON.stringify({ userId }),
-    });
+  const handleDelete = async (data: IUserDetails) => {
+    console.log(data);
+    setSelectedId(data?._id);
+    setSelectedItem(data.name);
+    setModalOpen(true);
+  };
 
-    router.refresh(); // Revalidate data
+  const handleDeleteConfirm = async () => {
+    try {
+      if (selectedId) {
+        const res = await blockUser(selectedId);
+        console.log(res);
+        if (res.success) {
+          router.refresh();
+          toast.success(res.message);
+          setModalOpen(false);
+        } else {
+          toast.error(res.message);
+        }
+      }
+    } catch (err: any) {
+      console.error(err?.message);
+    }
   };
 
   // Handle role update
   const handleUpdateRole = async (userId: string, newRole: string) => {
-    await fetch("/api/users", {
-      method: "PATCH",
-      body: JSON.stringify({ userId, role: newRole }),
-    });
-
-    router.refresh(); // Revalidate data
+    const roleInfo = {
+      role: newRole,
+    };
+    console.log("new role", roleInfo);
+    try {
+      if (userId) {
+        const res = await updateUserRole(userId, roleInfo);
+        console.log(res);
+        if (res.success) {
+          router.refresh();
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      }
+    } catch (err: any) {
+      console.error(err?.message);
+    }
   };
 
   const columns: ColumnDef<IUserDetails>[] = [
@@ -136,7 +173,7 @@ const UsersTable = () => {
         <button
           className="text-red-500"
           title="Delete"
-          onClick={() => handleDelete(row.original._id)}
+          onClick={() => handleDelete(row.original)}
         >
           <Trash className="w-5 h-5" />
         </button>
@@ -187,7 +224,7 @@ const UsersTable = () => {
             <SelectValue placeholder="Filter by Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem className="cursor-pointer" value="all">
+            <SelectItem className="cursor-pointer" value="All">
               All
             </SelectItem>
             <SelectItem className="cursor-pointer" value="true">
@@ -284,6 +321,12 @@ const UsersTable = () => {
           </Button>
         </div>
       </div>
+      <DeleteConfirmationModal
+        name={selectedItem}
+        isOpen={isModalOpen}
+        onOpenChange={setModalOpen}
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 };
