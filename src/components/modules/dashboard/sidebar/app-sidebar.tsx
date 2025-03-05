@@ -42,6 +42,12 @@ const data = {
       isActive: true,
     },
     {
+      title: "Listings",
+      url: "/listings",
+      icon: Users,
+      isActive: true,
+    },
+    {
       title: "Shop",
       url: "/user/shop/all-products",
       icon: Bot,
