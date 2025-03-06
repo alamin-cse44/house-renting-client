@@ -26,14 +26,16 @@ import {
 import { useState } from "react";
 import NMImageUploader from "@/components/ui/core/NMImageUploader";
 import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
-
   const form = useForm({
     resolver: zodResolver(registrationSchema),
   });
+
+  const router = useRouter();
 
   const {
     formState: { isSubmitting },
@@ -41,37 +43,57 @@ const RegisterForm = () => {
 
   const password = form.watch("password");
   const passwordConfirm = form.watch("passwordConfirm");
-  //   console.log(password, passwordConfirm);
+
+  // Cloudinary Upload Function
+  const uploadImagesToCloudinary = async () => {
+    const cloudName = `${process.env.NEXT_PUBLIC_CLOUD_NAME}`; // Replace with your Cloudinary cloud name
+    const uploadPreset = "first_preset_name"; // Replace with your Cloudinary upload preset
+    const urls = [];
+
+    for (const file of imageFiles) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      try {
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+        if (data.secure_url) {
+          urls.push({ url: data.secure_url });
+        }
+      } catch (error) {
+        console.error("Error uploading image to Cloudinary:", error);
+      }
+    }
+
+    return urls;
+  };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // const formData = new FormData();
-    // console.log("formData", formData);
-    // formData.append("file", data.image[0]);
-    // formData.append("upload_preset", "first_preset_name");
-    // formData.append("cloud_name", `${process.env.NEXT_PUBLIC_CLOUD_NAME}`);
-
-    // try {
-    //   const response = await fetch(
-    //     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
-    //     {
-    //       method: "POST",
-    //       body: formData,
-    //     }
-    //   );
-    //   const img_result = await response.json();
-    //   console.log("image response: ", img_result.url);
-    // } catch (error) {}
-
-    const modifiedData = {
-      ...data,
-      phone: "+880 " + data.phone,
-    };
+    if (imageFiles.length === 0) {
+      toast.error("Please upload your profile image.");
+      return;
+    }
 
     try {
+      const uploadedImages = await uploadImagesToCloudinary();
+      const modifiedData = {
+        ...data,
+        phone: "+880 " + data.phone,
+        image: uploadedImages[0].url,
+      };
       const res = await registerUser(modifiedData);
       console.log("res", res);
       if (res.success) {
         toast.success(res?.message);
+        router.push("/login");
       } else {
         toast.error(res?.message);
       }
@@ -90,7 +112,7 @@ const RegisterForm = () => {
       </div>
       <Form {...form}>
         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* {imagePreview.length > 0 ? (
+          {imagePreview.length > 0 ? (
             <ImagePreviewer
               setImageFiles={setImageFiles}
               imagePreview={imagePreview}
@@ -105,7 +127,7 @@ const RegisterForm = () => {
                 label="Upload Profile"
               />
             </div>
-          )} */}
+          )}
 
           <FormField
             control={form.control}

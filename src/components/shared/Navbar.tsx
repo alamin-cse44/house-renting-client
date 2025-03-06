@@ -104,7 +104,7 @@ const Navbar = () => {
                   <PopoverTrigger>
                     <Avatar>
                       <AvatarImage
-                        src="https://github.com/shadcn.png"
+                        src={user?.image}
                         alt="@shadcn"
                       />
                     </Avatar>

@@ -4,9 +4,29 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
 
-interface Role {
-  role: string;
-}
+export const createListing = async (data: FieldValues) => {
+  try {
+    const user = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    const result = await user.json();
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
 
 export const getAllListings = async (query: any) => {
   try {

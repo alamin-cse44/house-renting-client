@@ -16,10 +16,13 @@ import NMImageUploader from "@/components/ui/core/NMImageUploader";
 import { useState } from "react";
 import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer";
 import { toast } from "sonner";
-import { createShop } from "@/services/Shop";
 import { useUser } from "@/context/UserContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { listingValidationSchema } from "@/components/modules/listing/ListingValidation";
+import { createListing } from "@/services/ListingService";
+import { useRouter } from "next/navigation";
+import { Upload } from "lucide-react";
+import { IListing, TResponse } from "@/types";
 
 export default function CreateListingForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
@@ -28,46 +31,54 @@ export default function CreateListingForm() {
     resolver: zodResolver(listingValidationSchema),
   });
 
+  const router = useRouter();
+
   const { user, setIsLoading } = useUser();
-  console.log("user", user);
+  //   console.log("user", user);
 
   const {
     formState: { isSubmitting },
   } = form;
 
-  // Cloudinary Upload Function
-  const uploadImagesToCloudinary = async () => {
-    const cloudName = `${process.env.NEXT_PUBLIC_CLOUD_NAME}`; // Replace with your Cloudinary cloud name
-    const uploadPreset = "first_preset_name"; // Replace with your Cloudinary upload preset
-    const urls = [];
+  // Cloudinary Configuration
+  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUD_NAME;
+  const UPLOAD_PRESET = "first_preset_name";
 
-    for (const file of imageFiles) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", uploadPreset);
+  // Cloudinary Image Upload Function
+  const uploadImagesToCloudinary = async (): Promise<{ url: string }[]> => {
+    try {
+      const uploadPromises = imageFiles.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
 
-      try {
         const res = await fetch(
-          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
+          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+          { method: "POST", body: formData }
         );
 
         const data = await res.json();
-        if (data.secure_url) {
-          urls.push({ url: data.secure_url });
-        }
-      } catch (error) {
-        console.error("Error uploading image to Cloudinary:", error);
-      }
-    }
+        return data.secure_url ? { url: data.secure_url } : null;
+      });
 
-    return urls;
+      // Wait for all uploads to complete
+      const uploadedImages = (await Promise.all(uploadPromises)).filter(
+        Boolean
+      );
+      return uploadedImages as { url: string }[];
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      return [];
+    }
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (imageFiles.length < 2) {
+      toast.error("Please upload at least three images.");
+      return;
+    }
+
+    setIsLoading(true);
     try {
       setIsLoading(true);
 
@@ -82,15 +93,18 @@ export default function CreateListingForm() {
         landLord: user?.userId,
         price: Number(data?.price),
         bedrooms: Number(data?.bedrooms),
-        images: uploadedImages, // Image URLs from Cloudinary
+        image: uploadedImages,
       };
 
       // Send data to backend
-      //   const res = await createShop(modifiedData);
+      const res = await createListing(modifiedData);
 
-      //   if (res.success) {
-      //     toast.success(res.message);
-      //   }
+      console.log(res);
+
+      if (res.success) {
+        toast.success(res.message);
+        router.push("/listing");
+      }
     } catch (err) {
       console.error("Error submitting form:", err);
       toast.error("Failed to create listing");
