@@ -7,7 +7,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { usePathname, useRouter } from "next/navigation";
-import { Trash } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IListing } from "@/types";
-import {
-  blockUser,
-  updateUserRole,
-} from "@/services/AdminService";
+import { blockUser, updateUserRole } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
 import { getAllListings } from "@/services/ListingService";
+import Link from "next/link";
 
 const ListingsTable = () => {
   const router = useRouter();
@@ -76,7 +74,7 @@ const ListingsTable = () => {
   const paginatedData = useMemo(() => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
-    return listings.slice(start, end);
+    return listings?.slice(start, end);
   }, [listings, pageIndex, pageSize]);
 
   // Handle delete
@@ -105,8 +103,8 @@ const ListingsTable = () => {
     }
   };
 
-  // Handle role update
-  const handleUpdateRole = async (userId: string, newRole: string) => {
+  // Handle update
+  const handleUpdateListing = async (userId: string, newRole: string) => {
     const roleInfo = {
       role: newRole,
     };
@@ -154,13 +152,20 @@ const ListingsTable = () => {
       accessorKey: "action",
       header: "Action",
       cell: ({ row }) => (
-        <button
-          className="text-red-500"
-          title="Delete"
-          onClick={() => handleDelete(row.original)}
-        >
-          <Trash className="w-5 h-5" />
-        </button>
+        <div className="flex justify-between">
+          <button
+            className="text-red-500"
+            title="Delete"
+            onClick={() => handleDelete(row.original)}
+          >
+            <Trash className="w-5 h-5" />
+          </button>
+          <Link href={`/listings/${row.original?._id}`}>
+            <button className="text-green-500" title="Update">
+              <Edit className="w-5 h-5" />
+            </button>
+          </Link>
+        </div>
       ),
     },
   ];
@@ -295,10 +300,10 @@ const ListingsTable = () => {
             Prev
           </Button>
           <span className="mx-4">
-            Page {pageIndex + 1} of {Math.ceil(listings.length / pageSize)}
+            Page {pageIndex + 1} of {Math.ceil(listings?.length / pageSize)}
           </span>
           <Button
-            disabled={(pageIndex + 1) * pageSize >= listings.length}
+            disabled={(pageIndex + 1) * pageSize >= listings?.length}
             onClick={() => setPageIndex((prev) => prev + 1)}
           >
             Next

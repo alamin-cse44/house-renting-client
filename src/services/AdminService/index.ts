@@ -80,10 +80,10 @@ export const blockUser = async (id: string) => {
   }
 };
 
-export const getSingleListingsByAdmin = async (id: string) => {
+export const getSingleListingByAdmin = async (id: string) => {
   try {
     const user = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/admin/listings?${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/admin/listings/${id}`,
       {
         method: "GET",
         cache: "no-store",

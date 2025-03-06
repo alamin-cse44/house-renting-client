@@ -79,7 +79,7 @@ export const getAllListingsById = async (query: any) => {
 export const getSingleListingsByLandlord = async (id: string) => {
   try {
     const user = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings?${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings/${id}`,
       {
         method: "GET",
         cache: "no-store",
