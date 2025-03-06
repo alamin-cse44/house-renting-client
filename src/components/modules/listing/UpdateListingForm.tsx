@@ -34,6 +34,8 @@ export default function UpdateListingForm({ listing }: { listing: IListing }) {
 
   const { user, setIsLoading } = useUser();
 
+  console.log("update listing user", user);
+
   const {
     formState: { isSubmitting },
   } = form;
@@ -94,7 +96,11 @@ export default function UpdateListingForm({ listing }: { listing: IListing }) {
 
       if (res.success) {
         toast.success(res.message);
-        router.push("/listings");
+        if (user?.userRole === "admin") {
+          router.push("/listings");
+        } else {
+          router.push("/landLord/my-listings");
+        }
       }
     } catch (err) {
       console.error("Error submitting form:", err);

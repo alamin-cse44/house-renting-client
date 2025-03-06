@@ -9,9 +9,11 @@ const ListingUpdatePage = async({
   }) => {
     const { listingId } = await params;
 
+    console.log("listing id", listingId);
+
     const listing = await getSingleListingByAdmin(listingId);
 
-    console.log("listing id", listing?.data);
+    console.log("listing data", listing?.data);
     return (
         <div>
             <UpdateListingForm listing={listing?.data} />

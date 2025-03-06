@@ -25,98 +25,81 @@ import {
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
 // import Logo from "@/app/assets/svgs/Logo";
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/profile",
-      icon: SquareTerminal,
-      isActive: true,
-    },
-    {
-      title: "Users",
-      url: "/admin/users",
-      icon: Users,
-      isActive: true,
-    },
-    {
-      title: "All Listings",
-      url: "/listings",
-      icon: Users,
-      isActive: true,
-    },
-    {
-      title: "My Listings",
-      url: "/landLord/my-listings",
-      icon: Users,
-      isActive: true,
-    },
-    {
-      title: "Shop",
-      url: "/user/shop/all-products",
-      icon: Bot,
-      items: [
-        {
-          title: "Manage Products",
-          url: "/user/shop/all-products",
-        },
-        {
-          title: "Manage Categories",
-          url: "/user/shop/category",
-        },
-        {
-          title: "Manage Brands",
-          url: "/user/shop/brand",
-        },
-      ],
-    },
-
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
-      items: [
-        {
-          title: "Profile",
-          url: "/profile",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser();
+  const data = {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/profile",
+        icon: SquareTerminal,
+        isActive: true,
+      },
+      {
+        title: "Users",
+        url: "/admin/users",
+        icon: Users,
+        isActive: true,
+      },
+      {
+        title: "All Listings",
+        url: "/listings",
+        icon: Users,
+        isActive: true,
+      },
+      {
+        title: "My Listings",
+        url: "/landLord/my-listings",
+        icon: Users,
+        isActive: true,
+      },
+      // {
+      //   title: "Shop",
+      //   url: "/user/shop/all-products",
+      //   icon: Bot,
+      //   items: [
+      //     {
+      //       title: "Manage Products",
+      //       url: "/user/shop/all-products",
+      //     },
+      //     {
+      //       title: "Manage Categories",
+      //       url: "/user/shop/category",
+      //     },
+      //     {
+      //       title: "Manage Brands",
+      //       url: "/user/shop/brand",
+      //     },
+      //   ],
+      // },
+    ],
+    navLandlord: [
+      {
+        title: "Dashboard",
+        url: "/profile",
+        icon: SquareTerminal,
+        isActive: true,
+      },
+      {
+        title: "My Listings",
+        url: "/landLord/my-listings",
+        icon: Users,
+        isActive: true,
+      },
+    ],
+
+    navTenanat: [
+      {
+        title: "Dashboard",
+        url: "/profile",
+        icon: SquareTerminal,
+        isActive: true,
+      },
+    ],
+  };
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -136,7 +119,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {user?.userRole === "admin" && <NavMain items={data.navMain} />}
+        {user?.userRole === "landLord" && <NavMain items={data.navLandlord} />}
+        {user?.userRole === "tenant" && <NavMain items={data.navTenanat} />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
