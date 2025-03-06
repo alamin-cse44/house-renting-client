@@ -35,8 +35,8 @@ const Navbar = () => {
   const menuItems = [
     { title: "Home", link: "/" },
     { title: "Dashboard", link: "/profile" },
-    { title: "All Listings", link: "all-listings" },
-    { title: "About Us", link: "about" },
+    { title: "All Listings", link: "/all-listings" },
+    { title: "About Us", link: "/about" },
   ];
 
   return (
