@@ -35,35 +35,68 @@ export default function CreateListingForm() {
     formState: { isSubmitting },
   } = form;
 
+  // Cloudinary Upload Function
+  const uploadImagesToCloudinary = async () => {
+    const cloudName = `${process.env.NEXT_PUBLIC_CLOUD_NAME}`; // Replace with your Cloudinary cloud name
+    const uploadPreset = "first_preset_name"; // Replace with your Cloudinary upload preset
+    const urls = [];
+
+    for (const file of imageFiles) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      try {
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+        if (data.secure_url) {
+          urls.push({ url: data.secure_url });
+        }
+      } catch (error) {
+        console.error("Error uploading image to Cloudinary:", error);
+      }
+    }
+
+    return urls;
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log("data", data);
+    try {
+      setIsLoading(true);
 
-    const modifiedData = {
-      ...data,
-      landLord: user?.userId,
-      price: Number(data?.price),
-      bedrooms: Number(data?.bedrooms),
-    };
+      // Upload images to Cloudinary
+      const uploadedImages = await uploadImagesToCloudinary();
 
-    console.log("modifiedData: ", modifiedData);
+      console.log("images", uploadedImages);
 
-    // try {
-    //   const formData = new FormData();
-    //   formData.append("data", JSON.stringify(modifiedData));
-    //   formData.append("logo", imageFiles[0]);
+      // Prepare modified data
+      const modifiedData = {
+        ...data,
+        landLord: user?.userId,
+        price: Number(data?.price),
+        bedrooms: Number(data?.bedrooms),
+        images: uploadedImages, // Image URLs from Cloudinary
+      };
 
-    //   console.log(formData);
+      // Send data to backend
+      //   const res = await createShop(modifiedData);
 
-    //   const res = await createShop(formData);
-
-    //   console.log(res);
-
-    //   if (res.success) {
-    //     toast.success(res.message);
-    //   }
-    // } catch (err: any) {
-    //   console.error(err);
-    // }
+      //   if (res.success) {
+      //     toast.success(res.message);
+      //   }
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      toast.error("Failed to create listing");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

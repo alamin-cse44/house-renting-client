@@ -224,7 +224,7 @@ const UsersTable = () => {
             <SelectValue placeholder="Filter by Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem className="cursor-pointer" value="All">
+            <SelectItem className="cursor-pointer" value="all">
               All
             </SelectItem>
             <SelectItem className="cursor-pointer" value="true">
