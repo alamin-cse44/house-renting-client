@@ -42,8 +42,14 @@ const data = {
       isActive: true,
     },
     {
-      title: "Listings",
+      title: "All Listings",
       url: "/listings",
+      icon: Users,
+      isActive: true,
+    },
+    {
+      title: "My Listings",
+      url: "/landLord/my-listings",
       icon: Users,
       isActive: true,
     },
@@ -119,7 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <div className="flex items-center justify-center">
-                  {/* <Logo /> */} 
+                  {/* <Logo /> */}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <h2 className="font-bold text-xl">BasaFinder</h2>

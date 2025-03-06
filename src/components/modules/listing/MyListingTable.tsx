@@ -22,10 +22,10 @@ import { IListing } from "@/types";
 import { deleteListingByAdmin } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
-import { getAllListings } from "@/services/ListingService";
+import { getAllListingsById } from "@/services/ListingService";
 import Link from "next/link";
 
-const ListingsTable = () => {
+const MyListingsTable = () => {
   const router = useRouter();
   const [listings, setListings] = useState<IListing[]>([]);
   const [search, setSearch] = useState("");
@@ -51,7 +51,7 @@ const ListingsTable = () => {
       const query = new URLSearchParams(queryParams).toString();
       router.push(`${pathname}?${query}`);
 
-      const res = await getAllListings(query);
+      const res = await getAllListingsById(query);
 
       if (!res) throw new Error("Failed to fetch listings");
       console.log(res);
@@ -298,4 +298,4 @@ const ListingsTable = () => {
   );
 };
 
-export default ListingsTable;
+export default MyListingsTable;

@@ -103,7 +103,7 @@ export default function CreateListingForm() {
 
       if (res.success) {
         toast.success(res.message);
-        router.push("/listings");
+        router.push("/landLord/my-listings");
       }
     } catch (err) {
       console.error("Error submitting form:", err);
