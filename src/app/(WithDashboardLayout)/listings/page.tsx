@@ -1,3 +1,4 @@
+import ListingsTable from "@/components/modules/listing/ListingsTable";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +14,7 @@ const Listings = () => {
           </Button>
         </Link>
       </div>
+      <ListingsTable />
     </div>
   );
 };

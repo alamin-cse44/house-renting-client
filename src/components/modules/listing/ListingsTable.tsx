@@ -18,21 +18,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IUserDetails } from "@/types";
+import { IListing } from "@/types";
 import {
   blockUser,
-  getAllUsers,
   updateUserRole,
 } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
+import { getAllListings } from "@/services/ListingService";
 
 const ListingsTable = () => {
   const router = useRouter();
-  const [users, setUsers] = useState<IUserDetails[]>([]);
+  const [listings, setListings] = useState<IListing[]>([]);
   const [search, setSearch] = useState("");
-  const [role, setRole] = useState("");
-  const [status, setStatus] = useState("");
+  // const [status, setStatus] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -41,51 +40,50 @@ const ListingsTable = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
-  const fetchUsers = async () => {
+  const fetchListings = async () => {
     setLoading(true); // Show loader before fetching
 
     try {
       const queryParams: Record<string, string> = {};
       if (search) queryParams.search = search;
-      if (role && role !== "") queryParams.role = role;
-      if (status && status !== "") queryParams.isBlocked = status;
+      // if (status && status !== "") queryParams.isBlocked = status;
       if (pageSize) queryParams.limit = pageSize.toString();
       if (pageIndex) queryParams.page = pageIndex.toString();
 
       const query = new URLSearchParams(queryParams).toString();
       router.push(`${pathname}?${query}`);
 
-      const res = await getAllUsers(query);
+      const res = await getAllListings(query);
 
-      if (!res) throw new Error("Failed to fetch users");
+      if (!res) throw new Error("Failed to fetch listings");
       console.log(res);
 
-      setUsers(res?.data);
+      setListings(res?.data);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching listings:", error);
     } finally {
       setLoading(false); // Hide loader after fetching
     }
   };
-  // Fetch users
+  // Fetch listings
   useEffect(() => {
-    fetchUsers();
-  }, [search, role, status, pageSize, pageIndex]);
+    fetchListings();
+  }, [search, pageSize, pageIndex]);
 
-  console.log("users", users);
+  console.log("listings", listings);
 
   // Paginate the data using useMemo
   const paginatedData = useMemo(() => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
-    return users.slice(start, end);
-  }, [users, pageIndex, pageSize]);
+    return listings.slice(start, end);
+  }, [listings, pageIndex, pageSize]);
 
   // Handle delete
-  const handleDelete = async (data: IUserDetails) => {
+  const handleDelete = async (data: IListing) => {
     console.log(data);
     setSelectedId(data?._id);
-    setSelectedItem(data.name);
+    setSelectedItem(data?.apartmentType);
     setModalOpen(true);
   };
 
@@ -95,7 +93,7 @@ const ListingsTable = () => {
         const res = await blockUser(selectedId);
         console.log(res);
         if (res.success) {
-          fetchUsers();
+          fetchListings();
           toast.success(res.message);
           setModalOpen(false);
         } else {
@@ -118,7 +116,7 @@ const ListingsTable = () => {
         const res = await updateUserRole(userId, roleInfo);
         console.log(res);
         if (res.success) {
-          fetchUsers();
+          fetchListings();
           toast.success(res.message);
         } else {
           toast.error(res.message);
@@ -129,43 +127,29 @@ const ListingsTable = () => {
     }
   };
 
-  const columns: ColumnDef<IUserDetails>[] = [
-    { accessorKey: "name", header: "Name" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "phone", header: "Phone" },
-    {
-      accessorKey: "role",
-      header: "Role",
-      cell: ({ row }) => (
-        <Select
-          onValueChange={(value) => handleUpdateRole(row.original._id, value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={row.original.role} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="admin">Admin</SelectItem>
-            <SelectItem value="landLord">LandLord</SelectItem>
-            <SelectItem value="tenant">Tenant</SelectItem>
-          </SelectContent>
-        </Select>
-      ),
-    },
-    {
-      accessorKey: "isBlocked",
-      header: "Status",
-      cell: ({ row }) => (
-        <p
-          className={`text-center px-2 rounded ${
-            row.original.isBlocked
-              ? "text-red-500 bg-red-100"
-              : "text-green-500 bg-green-100"
-          }`}
-        >
-          {row.original.isBlocked ? "Blocked" : "Active"}
-        </p>
-      ),
-    },
+  const columns: ColumnDef<IListing>[] = [
+    { accessorKey: "apartmentType", header: "Apartment Type" },
+    { accessorKey: "location", header: "Location" },
+    { accessorKey: "price", header: "Price" },
+    { accessorKey: "bedrooms", header: "Bedrooms" },
+    // {
+    //   accessorKey: "role",
+    //   header: "Role",
+    //   cell: ({ row }) => (
+    //     <Select
+    //       onValueChange={(value) => handleUpdateRole(row.original._id, value)}
+    //     >
+    //       <SelectTrigger>
+    //         <SelectValue placeholder={row.original.role} />
+    //       </SelectTrigger>
+    //       <SelectContent>
+    //         <SelectItem value="admin">Admin</SelectItem>
+    //         <SelectItem value="landLord">LandLord</SelectItem>
+    //         <SelectItem value="tenant">Tenant</SelectItem>
+    //       </SelectContent>
+    //     </Select>
+    //   ),
+    // },
     {
       accessorKey: "action",
       header: "Action",
@@ -196,7 +180,7 @@ const ListingsTable = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Select
+        {/* <Select
           onValueChange={(value) => setRole(value === "all" ? "" : value)}
         >
           <SelectTrigger>
@@ -216,8 +200,8 @@ const ListingsTable = () => {
               Tenant
             </SelectItem>
           </SelectContent>
-        </Select>
-        <Select
+        </Select> */}
+        {/* <Select
           onValueChange={(value) => setStatus(value === "all" ? "" : value)}
         >
           <SelectTrigger>
@@ -234,7 +218,7 @@ const ListingsTable = () => {
               Active
             </SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
       </div>
 
       {/* Table */}
@@ -311,10 +295,10 @@ const ListingsTable = () => {
             Prev
           </Button>
           <span className="mx-4">
-            Page {pageIndex + 1} of {Math.ceil(users.length / pageSize)}
+            Page {pageIndex + 1} of {Math.ceil(listings.length / pageSize)}
           </span>
           <Button
-            disabled={(pageIndex + 1) * pageSize >= users.length}
+            disabled={(pageIndex + 1) * pageSize >= listings.length}
             onClick={() => setPageIndex((prev) => prev + 1)}
           >
             Next

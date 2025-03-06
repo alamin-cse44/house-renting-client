@@ -73,8 +73,8 @@ export default function CreateListingForm() {
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    if (imageFiles.length < 2) {
-      toast.error("Please upload at least three images.");
+    if (imageFiles.length === 0) {
+      toast.error("Please upload at least one image.");
       return;
     }
 
