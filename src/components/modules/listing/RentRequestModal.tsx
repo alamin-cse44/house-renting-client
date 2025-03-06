@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createCategory } from "@/services/Category";
+import { useUser } from "@/context/UserContext";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -28,15 +28,21 @@ import { toast } from "sonner";
 const RentRequestModal = () => {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
-
   const form = useForm();
+  const { user, setIsLoading } = useUser();
   const {
     formState: { isSubmitting },
   } = form;
 
+  // console.log("user in renting", user);
+
+  const handleAuthorizeUser = () => {
+    toast.error("You are not allowed! Please login first!");
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data)
-    if(!data?.isAgree || data?.isAgree == "undefined"){
+    console.log(data);
+    if (!data?.isAgree || data?.isAgree == "undefined") {
       toast.error("Please agree with the terms and conditions");
       return;
     }
@@ -59,9 +65,16 @@ const RentRequestModal = () => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="w-full mt-5">Request For Renting</Button>
-      </DialogTrigger>
+      {!user ? (
+        <Button onClick={handleAuthorizeUser} className="w-full mt-5">
+          Click For Renting
+        </Button>
+      ) : (
+        <DialogTrigger asChild>
+          <Button className="w-full mt-5">Request For Renting</Button>
+        </DialogTrigger>
+      )}
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Renting Information</DialogTitle>
@@ -134,7 +147,6 @@ const RentRequestModal = () => {
                     <FormLabel>
                       I'm accepting the terms and conditions
                     </FormLabel>
-                    
                   </div>
                 </FormItem>
               )}

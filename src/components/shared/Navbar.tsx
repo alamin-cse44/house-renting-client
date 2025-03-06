@@ -142,7 +142,7 @@ const Navbar = () => {
       {/* Sliding Drawer */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-lg transform transition-transform duration-500 ease-in-out",
+          "fixed z-20 top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-lg transform transition-transform duration-500 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

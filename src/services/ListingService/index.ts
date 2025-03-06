@@ -36,9 +36,6 @@ export const getAllListings = async (query: any) => {
         method: "GET",
         cache: "no-store",
         headers: {
-          Authorization: `Bearer ${
-            (await cookies()).get("accessToken")!.value
-          }`,
           "Content-Type": "application/json",
         },
       }
@@ -76,7 +73,7 @@ export const getAllListingsById = async (query: any) => {
   }
 };
 
-export const getSingleListingsByLandlord = async (id: string) => {
+export const getSingleListingByLandlord = async (id: string) => {
   try {
     const user = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/landlords/listings/${id}`,
@@ -84,9 +81,7 @@ export const getSingleListingsByLandlord = async (id: string) => {
         method: "GET",
         cache: "no-store",
         headers: {
-          Authorization: `Bearer ${
-            (await cookies()).get("accessToken")!.value
-          }`,
+          "Content-type": "application/json"
         },
       }
     );

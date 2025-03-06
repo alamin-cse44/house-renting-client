@@ -1,6 +1,10 @@
 import Gallery from "@/components/modules/listing/Gallery";
 import RentRequestForm from "@/components/modules/listing/RentRequestModal";
+import { Button } from "@/components/ui/button";
 import Shell from "@/components/ui/core/Shell";
+import { getCurrentUser } from "@/services/AuthService";
+import { getSingleListingByLandlord } from "@/services/ListingService";
+import { toast } from "sonner";
 
 const ListingDetailsPage = async ({
   params,
@@ -8,17 +12,27 @@ const ListingDetailsPage = async ({
   params: Promise<{ listingId: string }>;
 }) => {
   const { listingId } = await params;
+  const user = await getCurrentUser();
+
+  const listing = await getSingleListingByLandlord(listingId);
+
 
   return (
     <Shell className="mt-10">
-      <h2>Product details page {listingId}</h2>
+      <h2 className="text-xl">
+        Details of{" "}
+        <span className="text-primary font-semibold">
+          {listing?.data?.apartmentType}
+        </span>
+      </h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6  my-5">
         {/* Left Side - Image Gallery */}
-        <Gallery />
+        <Gallery listing={listing?.data} />
 
         {/* Right Side - Form */}
         <div className="bg-white shadow-lg rounded-lg p-6 border w-full h-48 max-w-md">
           <h3 className="text-lg font-semibold mb-4">Book This Apartment</h3>
+          
           <RentRequestForm />
         </div>
       </div>

@@ -2,6 +2,8 @@ import Shell from "@/components/ui/core/Shell";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ListingCard from "@/components/ui/core/ListingCard";
+import { getAllListings } from "@/services/ListingService";
+import { IListing } from "@/types";
 
 const apartments = [
   {
@@ -60,7 +62,9 @@ const apartments = [
   },
 ];
 
-export default function Apartments() {
+const  Apartments = async() => {
+  const listings = await getAllListings("");
+  console.log("all listings", listings)
   return (
     <Shell className="my-16">
       {/* Heading */}
@@ -73,8 +77,8 @@ export default function Apartments() {
 
       {/* Apartments Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {apartments.map((apartment) => (
-          <ListingCard listing={apartment} key={apartment?.id} />
+        {listings?.data?.map((apartment: IListing) => (
+          <ListingCard listing={apartment} key={apartment?._id} />
         ))}
       </div>
 
@@ -89,3 +93,6 @@ export default function Apartments() {
     </Shell>
   );
 }
+
+
+export default Apartments;
