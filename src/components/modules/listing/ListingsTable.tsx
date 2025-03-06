@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IListing } from "@/types";
-import { blockUser, updateUserRole } from "@/services/AdminService";
+import { blockUser, deleteListingByAdmin } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
 import { getAllListings } from "@/services/ListingService";
@@ -88,34 +88,12 @@ const ListingsTable = () => {
   const handleDeleteConfirm = async () => {
     try {
       if (selectedId) {
-        const res = await blockUser(selectedId);
+        const res = await deleteListingByAdmin(selectedId);
         console.log(res);
         if (res.success) {
           fetchListings();
           toast.success(res.message);
           setModalOpen(false);
-        } else {
-          toast.error(res.message);
-        }
-      }
-    } catch (err: any) {
-      console.error(err?.message);
-    }
-  };
-
-  // Handle update
-  const handleUpdateListing = async (userId: string, newRole: string) => {
-    const roleInfo = {
-      role: newRole,
-    };
-    console.log("new role", roleInfo);
-    try {
-      if (userId) {
-        const res = await updateUserRole(userId, roleInfo);
-        console.log(res);
-        if (res.success) {
-          fetchListings();
-          toast.success(res.message);
         } else {
           toast.error(res.message);
         }
