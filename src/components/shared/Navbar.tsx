@@ -68,9 +68,9 @@ const Navbar = () => {
                   )}
                 >
                   {item.title}
-                  {active === item.title && (
+                  {/* {active === item.title && (
                     <span className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600"></span>
-                  )}
+                  )} */}
                 </button>
               </Link>
             ))}
