@@ -2,14 +2,7 @@
 
 import * as React from "react";
 import {
-  Bot,
-  Frame,
-  LifeBuoy,
   ListCollapse,
-  Map,
-  PieChart,
-  Send,
-  Settings,
   SquareTerminal,
   Users,
 } from "lucide-react";
