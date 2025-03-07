@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Bed, Bath, Star, Share2 } from "lucide-react";
+import { MapPin, Bed, Bath, Star, Share2, ListCollapse } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../button";
 import { IListing } from "@/types";
@@ -21,20 +21,23 @@ const ListingCard = ({ listing }: { listing: IListing }) => {
       <CardContent className="p-4">
         <h3 className="text-lg font-semibold">{listing?.apartmentType}</h3>
         <div className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-          <MapPin className="h-4 w-4 text-gray-400" /> {listing.location}
+          <ListCollapse className="h-4 w-4 text-gray-400" /> {listing?.category}
+        </div>
+        <div className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+          <MapPin className="h-4 w-4 text-gray-400" /> {listing?.location}
         </div>
         {/* Divider */}
         <div className="border-b border-gray-200 my-3"></div>
         <div className="flex justify-between items-center mt-2 text-gray-600 text-sm">
           <div className="flex items-center gap-2">
-            <Bed className="h-4 w-4 text-gray-400" /> {listing.bedrooms}
+            <Bed className="h-4 w-4 text-gray-400" /> {listing?.bedrooms}
           </div>
           <div className="flex items-center gap-2">
             <Bath className="h-4 w-4 text-gray-400" /> 2
           </div>
         </div>
         <div className="flex justify-between items-center mt-4">
-          <p className="text-lg font-bold">{listing.price}</p>
+          <p className="text-lg font-bold">{listing?.price}</p>
           <div className="flex items-center gap-2 text-gray-500">
             <Share2 className="h-5 w-5 cursor-pointer hover:text-gray-700" />
             <Star className="h-5 w-5 cursor-pointer hover:text-yellow-500" />

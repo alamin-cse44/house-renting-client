@@ -5,6 +5,7 @@ import {
   Bot,
   Frame,
   LifeBuoy,
+  ListCollapse,
   Map,
   PieChart,
   Send,
@@ -47,13 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "All Listings",
         url: "/listings",
-        icon: Users,
-        isActive: true,
-      },
-      {
-        title: "My Listings",
-        url: "/landLord/my-listings",
-        icon: Users,
+        icon: ListCollapse,
         isActive: true,
       },
       // {
@@ -86,7 +81,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "My Listings",
         url: "/landLord/my-listings",
-        icon: Users,
+        icon: ListCollapse,
         isActive: true,
       },
     ],

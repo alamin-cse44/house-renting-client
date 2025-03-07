@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IListing } from "@/types";
+import { IListing, listingCategory } from "@/types";
 import { deleteListingByAdmin } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
@@ -29,7 +29,7 @@ const MyListingsTable = () => {
   const router = useRouter();
   const [listings, setListings] = useState<IListing[]>([]);
   const [search, setSearch] = useState("");
-  // const [status, setStatus] = useState("");
+  const [category, setCategory] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ const MyListingsTable = () => {
     try {
       const queryParams: Record<string, string> = {};
       if (search) queryParams.search = search;
-      // if (status && status !== "") queryParams.isBlocked = status;
+      if (category && category !== "") queryParams.category = category;
       if (pageSize) queryParams.limit = pageSize.toString();
       if (pageIndex) queryParams.page = pageIndex.toString();
 
@@ -66,7 +66,7 @@ const MyListingsTable = () => {
   // Fetch listings
   useEffect(() => {
     fetchListings();
-  }, [search, pageSize, pageIndex]);
+  }, [search, category, pageSize, pageIndex]);
 
   console.log("listings", listings);
 
@@ -104,7 +104,8 @@ const MyListingsTable = () => {
   };
 
   const columns: ColumnDef<IListing>[] = [
-    { accessorKey: "apartmentType", header: "Apartment Type" },
+    { accessorKey: "apartmentType", header: "Title" },
+    { accessorKey: "category", header: "Category" },
     { accessorKey: "location", header: "Location" },
     { accessorKey: "price", header: "Price" },
     { accessorKey: "bedrooms", header: "Bedrooms" },
@@ -163,27 +164,27 @@ const MyListingsTable = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        {/* <Select
-          onValueChange={(value) => setRole(value === "all" ? "" : value)}
+        <Select
+          onValueChange={(value) => setCategory(value === "all" ? "" : value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Filter by Role" />
+            <SelectValue placeholder="Filter by Category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem className="cursor-pointer" value="all">
               All
             </SelectItem>
-            <SelectItem className="cursor-pointer" value="admin">
-              Admin
-            </SelectItem>
-            <SelectItem className="cursor-pointer" value="landLord">
-              LandLord
-            </SelectItem>
-            <SelectItem className="cursor-pointer" value="tenant">
-              Tenant
-            </SelectItem>
+            {listingCategory.map((category) => (
+              <SelectItem
+                key={category.id}
+                className="cursor-pointer"
+                value={category.name}
+              >
+                {category.name}
+              </SelectItem>
+            ))}
           </SelectContent>
-        </Select> */}
+        </Select>
         {/* <Select
           onValueChange={(value) => setStatus(value === "all" ? "" : value)}
         >

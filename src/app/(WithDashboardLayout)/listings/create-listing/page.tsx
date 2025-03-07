@@ -21,8 +21,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { listingValidationSchema } from "@/components/modules/listing/ListingValidation";
 import { createListing } from "@/services/ListingService";
 import { useRouter } from "next/navigation";
-import { Upload } from "lucide-react";
-import { IListing, TResponse } from "@/types";
+import { listingCategory } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function CreateListingForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
@@ -95,6 +101,8 @@ export default function CreateListingForm() {
         bedrooms: Number(data?.bedrooms),
         image: uploadedImages,
       };
+
+      // console.log("modifiedData", modifiedData);
 
       // Send data to backend
       const res = await createListing(modifiedData);
@@ -177,6 +185,37 @@ export default function CreateListingForm() {
                     <FormControl>
                       <Input {...field} value={field.value || ""} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="mt-4">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Listing Category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {listingCategory.map((category) => (
+                          <SelectItem key={category?.id} value={category?.name}>
+                            {category?.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}

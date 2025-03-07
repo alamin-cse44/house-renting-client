@@ -20,8 +20,15 @@ import { useUser } from "@/context/UserContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { listingValidationSchema } from "@/components/modules/listing/ListingValidation";
 import { useRouter } from "next/navigation";
-import { IListing } from "@/types";
+import { IListing, listingCategory } from "@/types";
 import { updateListingByAdmin } from "@/services/AdminService";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function UpdateListingForm({ listing }: { listing: IListing }) {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
@@ -34,7 +41,7 @@ export default function UpdateListingForm({ listing }: { listing: IListing }) {
 
   const { user, setIsLoading } = useUser();
 
-  console.log("update listing user", user);
+  // console.log("update listing user", user);
 
   const {
     formState: { isSubmitting },
@@ -85,6 +92,7 @@ export default function UpdateListingForm({ listing }: { listing: IListing }) {
         description: data?.description || listing?.description,
         price: Number(data?.price) || listing?.price,
         landLord: listing?.landLord?._id,
+        category: data?.category || listing?.category,
       };
 
       console.log("modifiedData", modifiedData);
@@ -189,6 +197,37 @@ export default function UpdateListingForm({ listing }: { listing: IListing }) {
                         value={field.value || ""}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="mt-4">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={`${listing?.category}`} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {listingCategory.map((category) => (
+                          <SelectItem key={category?.id} value={category?.name}>
+                            {category?.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
