@@ -17,9 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IRentalRequest } from "@/types";
-import {
-  blockUser,
-} from "@/services/AdminService";
+import { blockUser } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
 import { getAllMyRequests } from "@/services/RentingService";
@@ -139,37 +137,33 @@ const TenantRequestsTable = () => {
       accessorKey: "paymentStatus",
       header: "Payment Status",
       cell: ({ row }) => (
-        <p
-          className={`text-center px-2 rounded ${
-            !row.original.paymentStatus
-              ? "text-red-500 bg-red-100 p-2"
-              : "text-green-500 bg-green-100 p-2"
-          }`}
-        >
-          {row.original.paymentStatus ? "Successed" : "x"}
-        </p>
+        <>
+          {row.original.paymentStatus === "successed" ? (
+            <p
+              className={`text-center px-2 rounded bg-green-800 text-white p-2 `}
+            >
+              Successed
+            </p>
+          ): (
+            <p
+              className={`text-center px-2 rounded bg-red-500 text-white p-2 `}
+            >
+              NO
+            </p>
+          )}
+
+
+        </>
       ),
     },
     {
       accessorKey: "action",
-      header: "Action",
+      header: "Payment Action",
       cell: ({ row }) => (
         <>
-          {row.original.rentalStatus === "pending" ? (
-            <p
-              className={`text-center px-2 rounded bg-blue-500 text-white p-2 `}
-            >
-              Pending
-            </p>
-          ) : (
-            <button
-              className="text-red-500"
-              title="Delete"
-              onClick={() => handlePayment(row.original)}
-            >
-              Click to pay
-            </button>
-          )}
+          {row.original.rentalStatus === "approved" ? (
+            <Button className="w-full">Click to pay</Button>
+          ): ""}
         </>
       ),
     },
