@@ -1,10 +1,11 @@
 "use server";
 
+import { IRentalRequest } from "@/types";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 // create category
-export const createRentingRequest = async (data: FormData) => {
+export const createRentingRequest = async (data: IRentalRequest) => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/tenants/requests`,
@@ -12,8 +13,9 @@ export const createRentingRequest = async (data: FormData) => {
         method: "POST",
         headers: {
           Authorization: (await cookies()).get("accessToken")!.value,
+          "Content-Type": "application/json",
         },
-        body: data,
+        body: JSON.stringify(data),
       }
     );
 

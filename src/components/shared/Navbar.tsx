@@ -21,7 +21,7 @@ const Navbar = () => {
   const [cartQuantity, setCartQuantity] = useState(3);
   const [isOpen, setIsOpen] = useState(false);
   const { user, setIsLoading } = useUser();
-  console.log("user ", user);
+  // console.log("user ", user);
   const pathname = usePathname();
   const router = useRouter();
   const handleLogout = () => {

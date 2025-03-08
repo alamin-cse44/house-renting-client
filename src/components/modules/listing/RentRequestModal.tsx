@@ -1,9 +1,8 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
-import NMImageUploader from "@/components/ui/core/NMImageUploader";
-import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer";
 import {
   Dialog,
   DialogContent,
@@ -25,28 +24,28 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/context/UserContext";
 import { cn } from "@/lib/utils";
 import { createRentingRequest } from "@/services/RentingService";
-import { IListing } from "@/types";
+import { IListing,  } from "@/types";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const RentRequestModal = ({ listing }: { listing: IListing }) => {
-  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
-  const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+  const [open, setOpen] = useState(false);
   const form = useForm();
+  const router = useRouter();
   const { user, setIsLoading } = useUser();
   const {
     formState: { isSubmitting },
   } = form;
 
   // console.log("user in renting", user);
-  console.log("listing details", listing);
+  // console.log("listing details", listing);
 
   const handleAuthorizeUser = () => {
     toast.error("You are not allowed! Please login first!");
@@ -60,11 +59,11 @@ const RentRequestModal = ({ listing }: { listing: IListing }) => {
     }
 
     const requestingDetails = {
-      ...data,
-      duration: Number(data?.duration),
       listing: listing?._id,
       landlord: listing?.landLord?._id,
-      tenant: user?.userId,
+      tenant: user?.userId as string,
+      moveInDate: data?.moveInDate,
+      duration: Number(data?.duration),
       rentalStatus: "pending",
       paymentStatus: "",
       transactionId: "",
@@ -72,28 +71,29 @@ const RentRequestModal = ({ listing }: { listing: IListing }) => {
     };
 
     console.log("requestingDetails", requestingDetails);
-    // try {
-    //   const res = await createRentingRequest(requestingDetails);
-    //   console.log(res);
-    //   if (res?.success) {
-    //     toast.success(res?.message);
-    //   } else {
-    //     toast.error(res?.message);
-    //   }
-    // } catch (err: any) {
-    //   console.error(err);
-    // }
+    try {
+      const res = await createRentingRequest(requestingDetails);
+      console.log(res);
+      if (res?.success) {
+        toast.success(res?.message);
+        setOpen(false);
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       {!user ? (
         <Button onClick={handleAuthorizeUser} className="w-full mt-5">
           Click For Renting
         </Button>
       ) : (
         <DialogTrigger asChild>
-          <Button className="w-full mt-5">Request For Renting</Button>
+          <Button onClick={() => setOpen(true)} className="w-full mt-5">Request For Renting</Button>
         </DialogTrigger>
       )}
 
