@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IUserDetails } from "@/types";
+import { IRentalRequest, IUserDetails } from "@/types";
 import {
   blockUser,
   getAllUsers,
@@ -26,10 +26,11 @@ import {
 } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
+import { getAllTenantRequests } from "@/services/RentingService";
 
-const UsersTable = () => {
+const RentingRequestsTable = () => {
   const router = useRouter();
-  const [users, setUsers] = useState<IUserDetails[]>([]);
+  const [requests, setRequests] = useState<IRentalRequest[]>([]);
   const [search, setSearch] = useState("");
   const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
@@ -41,7 +42,7 @@ const UsersTable = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
-  const fetchUsers = async () => {
+  const fetchRequests = async () => {
     setLoading(true); // Show loader before fetching
 
     try {
@@ -55,37 +56,37 @@ const UsersTable = () => {
       const query = new URLSearchParams(queryParams).toString();
       router.push(`${pathname}?${query}`);
 
-      const res = await getAllUsers(query);
+      const res = await getAllTenantRequests(query);
 
       if (!res) throw new Error("Failed to fetch users");
       console.log(res);
 
-      setUsers(res?.data);
+      setRequests(res?.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setLoading(false); // Hide loader after fetching
     }
   };
-  // Fetch users
+  // Fetch requests
   useEffect(() => {
-    fetchUsers();
+    fetchRequests();
   }, [search, role, status, pageSize, pageIndex]);
 
-  console.log("users", users);
+  console.log("requests", requests);
 
   // Paginate the data using useMemo
   const paginatedData = useMemo(() => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
-    return users.slice(start, end);
-  }, [users, pageIndex, pageSize]);
+    return requests?.slice(start, end);
+  }, [requests, pageIndex, pageSize]);
 
   // Handle delete
-  const handleDelete = async (data: IUserDetails) => {
+  const handlePayment = async (data: IRentalRequest) => {
     console.log(data);
-    setSelectedId(data?._id);
-    setSelectedItem(data.name);
+    setSelectedId(data?._id as string);
+    // setSelectedItem(data?.name as string);
     setModalOpen(true);
   };
 
@@ -95,7 +96,7 @@ const UsersTable = () => {
         const res = await blockUser(selectedId);
         console.log(res);
         if (res.success) {
-          fetchUsers();
+          fetchRequests();
           toast.success(res.message);
           setModalOpen(false);
         } else {
@@ -118,7 +119,7 @@ const UsersTable = () => {
         const res = await updateUserRole(userId, roleInfo);
         console.log(res);
         if (res.success) {
-          fetchUsers();
+          fetchRequests();
           toast.success(res.message);
         } else {
           toast.error(res.message);
@@ -129,54 +130,96 @@ const UsersTable = () => {
     }
   };
 
-  const columns: ColumnDef<IUserDetails>[] = [
-    { accessorKey: "name", header: "Name" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "phone", header: "Phone" },
+  const columns: ColumnDef<IRentalRequest>[] = [
+    { accessorKey: "landlord.name", header: "Landlord" },
+    { accessorKey: "landlord.email", header: "Landlord Email" },
+    { accessorKey: "listing.category", header: "Apartment Type" },
+    { accessorKey: "listing.bedrooms", header: "Bedrooms" },
+    { accessorKey: "moveInDate", header: "Move In Date" },
     {
-      accessorKey: "role",
-      header: "Role",
+      accessorKey: "rentalStatus",
+      header: "Renting Status",
       cell: ({ row }) => (
-        <Select
-          onValueChange={(value) => handleUpdateRole(row.original._id, value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={row.original.role} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="admin">Admin</SelectItem>
-            <SelectItem value="landLord">LandLord</SelectItem>
-            <SelectItem value="tenant">Tenant</SelectItem>
-          </SelectContent>
-        </Select>
+        <>
+          {row.original.rentalStatus === "pending" && (
+            <p
+              className={`text-center px-2 rounded bg-blue-500 text-white p-2 `}
+            >
+              Pending
+            </p>
+          )}
+          {row.original.rentalStatus === "approved" && (
+            <p
+              className={`text-center px-2 rounded bg-green-500 text-white p-2 `}
+            >
+              Approved
+            </p>
+          )}
+          {row.original.rentalStatus === "rejected" && (
+            <p
+              className={`text-center px-2 rounded bg-red-500 text-white p-2 `}
+            >
+              Rejected
+            </p>
+          )}
+        </>
       ),
     },
     {
-      accessorKey: "isBlocked",
-      header: "Status",
+      accessorKey: "paymentStatus",
+      header: "Payment Status",
       cell: ({ row }) => (
         <p
           className={`text-center px-2 rounded ${
-            row.original.isBlocked
-              ? "text-red-500 bg-red-100"
-              : "text-green-500 bg-green-100"
+            !row.original.paymentStatus
+              ? "text-red-500 bg-red-100 p-2"
+              : "text-green-500 bg-green-100 p-2"
           }`}
         >
-          {row.original.isBlocked ? "Blocked" : "Active"}
+          {row.original.paymentStatus ? "Successed" : "x"}
         </p>
       ),
     },
+    // {
+    //   accessorKey: "role",
+    //   header: "Role",
+    //   cell: ({ row }) => (
+    //     <Select
+    //       onValueChange={(value) => handleUpdateRole(row.original._id as string, value)}
+    //     >
+    //       <SelectTrigger>
+    //         <SelectValue placeholder={"role"} />
+    //         {/* <SelectValue placeholder={row.original.role} /> */}
+    //       </SelectTrigger>
+    //       <SelectContent>
+    //         <SelectItem value="admin">Admin</SelectItem>
+    //         <SelectItem value="landLord">LandLord</SelectItem>
+    //         <SelectItem value="tenant">Tenant</SelectItem>
+    //       </SelectContent>
+    //     </Select>
+    //   ),
+    // },
     {
       accessorKey: "action",
       header: "Action",
       cell: ({ row }) => (
-        <button
-          className="text-red-500"
-          title="Delete"
-          onClick={() => handleDelete(row.original)}
-        >
-          <Trash className="w-5 h-5" />
-        </button>
+        <>
+          {row.original.rentalStatus === "pending" ? (
+            <p
+              className={`text-center px-2 rounded bg-blue-500 text-white p-2 `}
+            >
+              Pending
+            </p>
+          ) : (
+            <button
+              className="text-red-500"
+              title="Delete"
+              onClick={() => handlePayment(row.original)}
+            >
+              Click to pay
+            </button>
+          )}
+        </>
       ),
     },
   ];
@@ -311,10 +354,10 @@ const UsersTable = () => {
             Prev
           </Button>
           <span className="mx-4">
-            Page {pageIndex + 1} of {Math.ceil(users?.length / pageSize)}
+            Page {pageIndex + 1} of {Math.ceil(requests?.length / pageSize)}
           </span>
           <Button
-            disabled={(pageIndex + 1) * pageSize >= users?.length}
+            disabled={(pageIndex + 1) * pageSize >= requests?.length}
             onClick={() => setPageIndex((prev) => prev + 1)}
           >
             Next
@@ -331,4 +374,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export default RentingRequestsTable;

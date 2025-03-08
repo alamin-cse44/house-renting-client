@@ -64,7 +64,7 @@ const apartments = [
 
 const  Apartments = async() => {
   const listings = await getAllListings("");
-  console.log("all listings", listings)
+  // console.log("all listings", listings)
   return (
     <Shell className="my-16">
       {/* Heading */}

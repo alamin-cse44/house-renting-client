@@ -27,14 +27,49 @@ export const createRentingRequest = async (data: IRentalRequest) => {
   }
 };
 
-//get all categories
-export const getAllCategories = async () => {
+//get all RENTAL REQUESTS BY TENANT
+export const getAllMyRequests = async (query: any) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/category`, {
-      next: {
-        tags: ["RENTING"],
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/tenants/requests?${query}`,
+      {
+        next: {
+          tags: ["RENTING"],
+        },
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.json();
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+//get all RENTAL REQUESTS BY landlord
+export const getAllTenantRequests = async (query: any) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/requests?${query}`,
+      {
+        next: {
+          tags: ["RENTING"],
+        },
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return res.json();
   } catch (error: any) {

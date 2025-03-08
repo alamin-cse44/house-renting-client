@@ -155,7 +155,7 @@ const RentRequestModal = ({ listing }: { listing: IListing }) => {
               name="duration"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Duration</FormLabel>
+                  <FormLabel>Duration of Months</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} value={field.value || ""} />
                   </FormControl>
