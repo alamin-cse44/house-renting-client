@@ -77,20 +77,32 @@ export const getAllTenantRequests = async (query: any) => {
   }
 };
 
-// delete category
-export const deleteCategory = async (categoryId: string): Promise<any> => {
+// update renatl status
+export const updateRentalStatus = async (
+  id: string,
+  status: { rentalStatus: string }
+) => {
+  console.log("server role", status);
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/category/${categoryId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/landlords/requests/${id}`,
       {
-        method: "DELETE",
+        method: "PATCH",
         headers: {
-          Authorization: (await cookies()).get("accessToken")!.value,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
         },
+        body: JSON.stringify(status),
       }
     );
+
+    const result = await res.json();
+
     revalidateTag("RENTING");
-    return res.json();
+
+    return result;
   } catch (error: any) {
     return Error(error);
   }

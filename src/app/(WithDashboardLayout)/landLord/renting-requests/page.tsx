@@ -7,9 +7,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { usePathname, useRouter } from "next/navigation";
-import { Trash } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -18,37 +16,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IRentalRequest, IUserDetails } from "@/types";
-import {
-  blockUser,
-  getAllUsers,
-  updateUserRole,
-} from "@/services/AdminService";
+import { IRentalRequest } from "@/types";
+import { updateUserRole } from "@/services/AdminService";
 import { toast } from "sonner";
-import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
-import { getAllTenantRequests } from "@/services/RentingService";
+import {
+  getAllTenantRequests,
+  updateRentalStatus,
+} from "@/services/RentingService";
 
 const RentingRequestsTable = () => {
   const router = useRouter();
   const [requests, setRequests] = useState<IRentalRequest[]>([]);
-  const [search, setSearch] = useState("");
-  const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const fetchRequests = async () => {
-    setLoading(true); // Show loader before fetching
+    setLoading(true);
 
     try {
       const queryParams: Record<string, string> = {};
-      if (search) queryParams.search = search;
-      if (role && role !== "") queryParams.role = role;
       if (status && status !== "") queryParams.isBlocked = status;
       if (pageSize) queryParams.limit = pageSize.toString();
       if (pageIndex) queryParams.page = pageIndex.toString();
@@ -71,7 +60,7 @@ const RentingRequestsTable = () => {
   // Fetch requests
   useEffect(() => {
     fetchRequests();
-  }, [search, role, status, pageSize, pageIndex]);
+  }, [status, pageSize, pageIndex]);
 
   console.log("requests", requests);
 
@@ -82,41 +71,15 @@ const RentingRequestsTable = () => {
     return requests?.slice(start, end);
   }, [requests, pageIndex, pageSize]);
 
-  // Handle delete
-  const handlePayment = async (data: IRentalRequest) => {
-    console.log(data);
-    setSelectedId(data?._id as string);
-    // setSelectedItem(data?.name as string);
-    setModalOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
-        const res = await blockUser(selectedId);
-        console.log(res);
-        if (res.success) {
-          fetchRequests();
-          toast.success(res.message);
-          setModalOpen(false);
-        } else {
-          toast.error(res.message);
-        }
-      }
-    } catch (err: any) {
-      console.error(err?.message);
-    }
-  };
-
   // Handle role update
-  const handleUpdateRole = async (userId: string, newRole: string) => {
-    const roleInfo = {
-      role: newRole,
+  const handleRentingRequest = async (userId: string, status: string) => {
+    const statusInfo = {
+      rentalStatus: status,
     };
-    console.log("new role", roleInfo);
+    console.log("new role", statusInfo);
     try {
       if (userId) {
-        const res = await updateUserRole(userId, roleInfo);
+        const res = await updateRentalStatus(userId, statusInfo);
         console.log(res);
         if (res.success) {
           fetchRequests();
@@ -131,8 +94,8 @@ const RentingRequestsTable = () => {
   };
 
   const columns: ColumnDef<IRentalRequest>[] = [
-    { accessorKey: "landlord.name", header: "Landlord" },
-    { accessorKey: "landlord.email", header: "Landlord Email" },
+    { accessorKey: "tenant.name", header: "Tenant" },
+    { accessorKey: "tenant.email", header: "Tenant Email" },
     { accessorKey: "listing.category", header: "Apartment Type" },
     { accessorKey: "listing.bedrooms", header: "Bedrooms" },
     { accessorKey: "moveInDate", header: "Move In Date" },
@@ -180,46 +143,24 @@ const RentingRequestsTable = () => {
         </p>
       ),
     },
-    // {
-    //   accessorKey: "role",
-    //   header: "Role",
-    //   cell: ({ row }) => (
-    //     <Select
-    //       onValueChange={(value) => handleUpdateRole(row.original._id as string, value)}
-    //     >
-    //       <SelectTrigger>
-    //         <SelectValue placeholder={"role"} />
-    //         {/* <SelectValue placeholder={row.original.role} /> */}
-    //       </SelectTrigger>
-    //       <SelectContent>
-    //         <SelectItem value="admin">Admin</SelectItem>
-    //         <SelectItem value="landLord">LandLord</SelectItem>
-    //         <SelectItem value="tenant">Tenant</SelectItem>
-    //       </SelectContent>
-    //     </Select>
-    //   ),
-    // },
     {
-      accessorKey: "action",
+      accessorKey: "rentalStatus",
       header: "Action",
       cell: ({ row }) => (
-        <>
-          {row.original.rentalStatus === "pending" ? (
-            <p
-              className={`text-center px-2 rounded bg-blue-500 text-white p-2 `}
-            >
-              Pending
-            </p>
-          ) : (
-            <button
-              className="text-red-500"
-              title="Delete"
-              onClick={() => handlePayment(row.original)}
-            >
-              Click to pay
-            </button>
-          )}
-        </>
+        <Select
+          onValueChange={(value) =>
+            handleRentingRequest(row.original._id as string, value)
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={row.original.rentalStatus} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem className="cursor-pointer" value="pending">Pending</SelectItem>
+            <SelectItem className="cursor-pointer" value="approved">Approved</SelectItem>
+            <SelectItem className="cursor-pointer" value="rejected">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
       ),
     },
   ];
@@ -233,48 +174,25 @@ const RentingRequestsTable = () => {
   return (
     <div className="space-y-4 p-4">
       {/* Search & Filter Inputs */}
-      <div className="flex gap-2">
-        <Input
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Select
-          onValueChange={(value) => setRole(value === "all" ? "" : value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Filter by Role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem className="cursor-pointer" value="all">
-              All
-            </SelectItem>
-            <SelectItem className="cursor-pointer" value="admin">
-              Admin
-            </SelectItem>
-            <SelectItem className="cursor-pointer" value="landLord">
-              LandLord
-            </SelectItem>
-            <SelectItem className="cursor-pointer" value="tenant">
-              Tenant
-            </SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex gap-2 w-[200px]">
         <Select
           onValueChange={(value) => setStatus(value === "all" ? "" : value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Filter by Status" />
+            <SelectValue placeholder="Filter by Renting Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem className="cursor-pointer" value="all">
               All
             </SelectItem>
-            <SelectItem className="cursor-pointer" value="true">
-              Blocked
+            <SelectItem className="cursor-pointer" value="pending">
+              Pending
             </SelectItem>
-            <SelectItem className="cursor-pointer" value="false">
-              Active
+            <SelectItem className="cursor-pointer" value="approved">
+              Approved
+            </SelectItem>
+            <SelectItem className="cursor-pointer" value="rejected">
+              Rejected
             </SelectItem>
           </SelectContent>
         </Select>
@@ -364,12 +282,6 @@ const RentingRequestsTable = () => {
           </Button>
         </div>
       </div>
-      <DeleteConfirmationModal
-        name={selectedItem}
-        isOpen={isModalOpen}
-        onOpenChange={setModalOpen}
-        onConfirm={handleDeleteConfirm}
-      />
     </div>
   );
 };
