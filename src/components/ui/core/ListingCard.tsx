@@ -30,7 +30,7 @@ const ListingCard = ({ listing }: { listing: IListing }) => {
         <div className="border-b border-gray-200 my-3"></div>
         <div className="flex justify-between items-center mt-2 text-gray-600 text-sm">
           <div className="flex items-center gap-2">
-            <Bed className="h-4 w-4 text-gray-400" /> {listing?.bedrooms}
+            <Bed className="h-4 w-4 text-gray-400" /> {listing?.bedrooms} - Bedrooms
           </div>
           <div className="flex items-center gap-2">
             <Bath className="h-4 w-4 text-gray-400" /> 2

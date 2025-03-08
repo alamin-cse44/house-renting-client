@@ -33,7 +33,7 @@ const ListingDetailsPage = async ({
         <div className="bg-white shadow-lg rounded-lg p-6 border w-full h-48 max-w-md">
           <h3 className="text-lg font-semibold mb-4">Book This Apartment</h3>
           
-          <RentRequestForm />
+          <RentRequestForm listing={listing?.data} />
         </div>
       </div>
     </Shell>

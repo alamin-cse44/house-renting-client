@@ -21,7 +21,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { listingValidationSchema } from "@/components/modules/listing/ListingValidation";
 import { createListing } from "@/services/ListingService";
 import { useRouter } from "next/navigation";
-import { listingCategory } from "@/types";
 import {
   Select,
   SelectContent,
@@ -29,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { listingCategory } from "@/types/object";
 
 export default function CreateListingForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);

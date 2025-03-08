@@ -11,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IListing, listingCategory } from "@/types";
+import { IListing } from "@/types";
 import { getAllListings } from "@/services/ListingService";
 import ListingCard from "@/components/ui/core/ListingCard";
+import { listingCategory } from "@/types/object";
 
 const ViewAllListings = () => {
   const router = useRouter();

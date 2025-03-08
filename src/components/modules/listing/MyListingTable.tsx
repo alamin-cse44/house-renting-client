@@ -18,12 +18,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IListing, listingCategory } from "@/types";
+import { IListing } from "@/types";
 import { deleteListingByAdmin } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
 import { getAllListingsById } from "@/services/ListingService";
 import Link from "next/link";
+import { listingCategory } from "@/types/object";
 
 const MyListingsTable = () => {
   const router = useRouter();

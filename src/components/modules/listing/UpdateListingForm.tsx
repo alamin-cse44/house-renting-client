@@ -20,7 +20,7 @@ import { useUser } from "@/context/UserContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { listingValidationSchema } from "@/components/modules/listing/ListingValidation";
 import { useRouter } from "next/navigation";
-import { IListing, listingCategory } from "@/types";
+import { IListing } from "@/types";
 import { updateListingByAdmin } from "@/services/AdminService";
 import {
   Select,
@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { listingCategory } from "@/types/object";
 
 export default function UpdateListingForm({ listing }: { listing: IListing }) {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
