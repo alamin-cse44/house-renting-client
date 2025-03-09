@@ -99,6 +99,7 @@ const RentingRequestsTable = () => {
     { accessorKey: "listing.category", header: "Apartment Type" },
     { accessorKey: "listing.bedrooms", header: "Bedrooms" },
     { accessorKey: "moveInDate", header: "Move In Date" },
+    { accessorKey: "listing.price", header: "Price" },
     {
       accessorKey: "rentalStatus",
       header: "Renting Status",
@@ -139,7 +140,7 @@ const RentingRequestsTable = () => {
               : "text-green-500 bg-green-100 p-2"
           }`}
         >
-          {row.original.paymentStatus ? "Successed" : "x"}
+          {row.original.paymentStatus ? "PAID" : "x"}
         </p>
       ),
     },

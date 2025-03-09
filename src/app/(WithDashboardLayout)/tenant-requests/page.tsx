@@ -17,10 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IRentalRequest } from "@/types";
-import { blockUser } from "@/services/AdminService";
 import { toast } from "sonner";
-import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
-import { getAllMyRequests } from "@/services/RentingService";
+import {
+  createRentingPayment,
+  getAllMyRequests,
+} from "@/services/RentingService";
 
 const TenantRequestsTable = () => {
   const router = useRouter();
@@ -30,9 +31,6 @@ const TenantRequestsTable = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const fetchRequests = async () => {
     setLoading(true); // Show loader before fetching
@@ -63,7 +61,7 @@ const TenantRequestsTable = () => {
     fetchRequests();
   }, [status, pageSize, pageIndex]);
 
-  console.log("requests", requests);
+  // console.log("requests", requests);
 
   // Paginate the data using useMemo
   const paginatedData = useMemo(() => {
@@ -74,27 +72,15 @@ const TenantRequestsTable = () => {
 
   // Handle delete
   const handlePayment = async (data: IRentalRequest) => {
-    console.log(data);
-    setSelectedId(data?._id as string);
-    // setSelectedItem(data?.name as string);
-    setModalOpen(true);
-  };
+    const res = await createRentingPayment(data);
 
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
-        const res = await blockUser(selectedId);
-        console.log(res);
-        if (res.success) {
-          fetchRequests();
-          toast.success(res.message);
-          setModalOpen(false);
-        } else {
-          toast.error(res.message);
-        }
-      }
-    } catch (err: any) {
-      console.error(err?.message);
+    console.log("payments res", res);
+
+    if (res?.data) {
+      console.log("aiche ekhane");
+      window.open(res?.data, "_blank");
+    } else {
+      toast.error("Failed to create payment");
     }
   };
 
@@ -144,26 +130,38 @@ const TenantRequestsTable = () => {
             >
               Successed
             </p>
-          ): (
+          ) : (
             <p
               className={`text-center px-2 rounded bg-red-500 text-white p-2 `}
             >
-              NO
+              NOT PAID
             </p>
           )}
-
-
         </>
       ),
     },
+    { accessorKey: "listing.price", header: "Price" },
     {
       accessorKey: "action",
       header: "Payment Action",
       cell: ({ row }) => (
         <>
-          {row.original.rentalStatus === "approved" ? (
-            <Button className="w-full">Click to pay</Button>
-          ): ""}
+          {row.original.rentalStatus === "approved" &&
+            row.original.paymentStatus !== "successed" && (
+              <Button
+                onClick={() => handlePayment(row?.original)}
+                className="w-full"
+              >
+                Click to pay
+              </Button>
+            )}
+            {row.original.paymentStatus === "successed" && (
+              <Button
+                className="w-full bg-green-300 text-black"
+              >
+                PAID
+              </Button>
+            )}
         </>
       ),
     },
@@ -286,12 +284,6 @@ const TenantRequestsTable = () => {
           </Button>
         </div>
       </div>
-      <DeleteConfirmationModal
-        name={selectedItem}
-        isOpen={isModalOpen}
-        onOpenChange={setModalOpen}
-        onConfirm={handleDeleteConfirm}
-      />
     </div>
   );
 };
