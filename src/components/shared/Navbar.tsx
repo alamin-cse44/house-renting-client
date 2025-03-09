@@ -15,6 +15,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/services/AuthService";
 import { protectedRoutes } from "@/constants";
 import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
@@ -43,7 +44,7 @@ const Navbar = () => {
     <>
       {/* Main Navbar */}
       <nav className="bg-white shadow-md rounded-xl relative">
-        <div className="flex items-center justify-between px-3 py-3 container mx-auto ">
+        <div className="flex items-center justify-between px-3 py-1.5 container mx-auto ">
           {/* Left Section - Logo & Mobile Menu Button */}
           <div className="flex items-center space-x-2">
             <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
@@ -53,7 +54,16 @@ const Navbar = () => {
                 <Menu className="text-gray-600 w-6 h-6" />
               )}
             </button>
-            <span className="text-blue-600 text-2xl font-bold text-center">BasaFinder</span>
+            {/* <span className="text-blue-600 text-2xl font-bold text-center">BasaFinder</span> */}
+            <Link href={"/"}>
+              <Image
+                src="/logo.webp"
+                alt="Rental House"
+                width={'60'}
+                height={'30'}
+                className="rounded-lg"
+              />
+            </Link>
           </div>
 
           {/* Desktop Menu */}
@@ -103,10 +113,7 @@ const Navbar = () => {
                 <Popover>
                   <PopoverTrigger>
                     <Avatar>
-                      <AvatarImage
-                        src={user?.image}
-                        alt="@shadcn"
-                      />
+                      <AvatarImage src={user?.image} alt="@shadcn" />
                     </Avatar>
                   </PopoverTrigger>
                   <PopoverContent className="w-48 p-2 bg-white shadow-md rounded-md">

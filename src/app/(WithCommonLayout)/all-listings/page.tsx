@@ -1,6 +1,12 @@
 import ViewAllListings from "@/components/modules/listing/ViewAllListings";
 import Shell from "@/components/ui/core/Shell";
-import React from "react";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Basa Finder | Listings",
+  description: "Find Your Dream RentalComfort, convenience, and affordability all in one place.",
+};
 
 const AllListings = () => {
   return (

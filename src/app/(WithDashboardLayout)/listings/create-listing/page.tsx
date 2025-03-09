@@ -40,7 +40,7 @@ export default function CreateListingForm() {
   const router = useRouter();
 
   const { user, setIsLoading } = useUser();
-  //   console.log("user", user);
+  console.log("user", user);
 
   const {
     formState: { isSubmitting },
@@ -111,7 +111,11 @@ export default function CreateListingForm() {
 
       if (res.success) {
         toast.success(res.message);
-        router.push("/landLord/my-listings");
+        if (user?.userRole === "admin") {
+          router.push("/listings");
+        } else {
+          router.push("/landLord/my-listings");
+        }
       }
     } catch (err) {
       console.error("Error submitting form:", err);

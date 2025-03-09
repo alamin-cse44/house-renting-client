@@ -48,7 +48,7 @@ const ListingsTable = () => {
       if (category && category !== "") queryParams.category = category;
       if (pageSize) queryParams.limit = pageSize.toString();
       if (pageIndex) queryParams.page = pageIndex.toString();
-
+      queryParams.sortOrder = "desc";
       const query = new URLSearchParams(queryParams).toString();
       router.push(`${pathname}?${query}`);
 
@@ -80,7 +80,11 @@ const ListingsTable = () => {
 
   // Handle delete
   const handleDelete = async (data: IListing) => {
-    console.log(data);
+    // console.log(data);
+    if(listings?.length <= 7){
+      toast.error("Cannot delete! Please Add one or more!!");
+      return;
+    }
     setSelectedId(data?._id);
     setSelectedItem(data?.apartmentType);
     setModalOpen(true);

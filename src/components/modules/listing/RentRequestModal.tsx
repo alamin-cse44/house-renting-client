@@ -58,6 +58,11 @@ const RentRequestModal = ({ listing }: { listing: IListing }) => {
       return;
     }
 
+    if(user?.userRole !== "tenant"){
+      toast.error("Please register as a tenant to book this house!!!");
+      return;
+    }
+
     const requestingDetails = {
       listing: listing?._id,
       landlord: listing?.landLord?._id,

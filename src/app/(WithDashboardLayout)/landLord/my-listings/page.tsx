@@ -13,6 +13,7 @@ const MyListingPage = () => {
           </Button>
         </Link>
       </div>
+      <h2 className="mt-2"> N.B: To Delete or Update any listing please Add one & do on it!!!</h2>
       <MyListingsTable />
     </div>
     );
