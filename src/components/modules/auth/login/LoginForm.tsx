@@ -71,7 +71,7 @@ const LoginFormContent = ({ form, setUser, setIsLoading, router }: LoginFormProp
       setIsLoading(false);
       if (res.success) {
         toast.success(res?.message);
-        router.push(redirectUrl || "/profile");
+        router.push(redirectUrl || "/");
       } else {
         toast.error(res?.message);
       }
