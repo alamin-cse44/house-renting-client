@@ -1,10 +1,7 @@
 import Gallery from "@/components/modules/listing/Gallery";
 import RentRequestForm from "@/components/modules/listing/RentRequestModal";
-import { Button } from "@/components/ui/button";
 import Shell from "@/components/ui/core/Shell";
-import { getCurrentUser } from "@/services/AuthService";
 import { getSingleListingByLandlord } from "@/services/ListingService";
-import { toast } from "sonner";
 
 const ListingDetailsPage = async ({
   params,
@@ -12,7 +9,6 @@ const ListingDetailsPage = async ({
   params: Promise<{ listingId: string }>;
 }) => {
   const { listingId } = await params;
-  const user = await getCurrentUser();
 
   const listing = await getSingleListingByLandlord(listingId);
 

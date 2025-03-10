@@ -5,63 +5,6 @@ import ListingCard from "@/components/ui/core/ListingCard";
 import { getAllListings } from "@/services/ListingService";
 import { IListing } from "@/types";
 
-const apartments = [
-  {
-    id: 1,
-    title: "Family Apartment",
-    location: "Dhanmondi, Dhaka",
-    price: "$200",
-    bedrooms: "3 Bedrooms",
-    bathrooms: "2 Bathroom",
-    image: "/apartments/1.png",
-  },
-  {
-    id: 2,
-    title: "Family Apartment",
-    location: "Dhanmondi, Dhaka",
-    price: "$200",
-    bedrooms: "3 Bedrooms",
-    bathrooms: "2 Bathroom",
-    image: "/apartments/1.png",
-  },
-  {
-    id: 3,
-    title: "Family Apartment",
-    location: "Dhanmondi, Dhaka",
-    price: "$200",
-    bedrooms: "3 Bedrooms",
-    bathrooms: "2 Bathroom",
-    image: "/apartments/1.png",
-  },
-  {
-    id: 4,
-    title: "Family Apartment",
-    location: "Dhanmondi, Dhaka",
-    price: "$200",
-    bedrooms: "3 Bedrooms",
-    bathrooms: "2 Bathroom",
-    image: "/apartments/1.png",
-  },
-  {
-    id: 5,
-    title: "Family Apartment",
-    location: "Dhanmondi, Dhaka",
-    price: "$200",
-    bedrooms: "3 Bedrooms",
-    bathrooms: "2 Bathroom",
-    image: "/apartments/1.png",
-  },
-  {
-    id: 6,
-    title: "Family Apartment",
-    location: "Dhanmondi, Dhaka",
-    price: "$200",
-    bedrooms: "3 Bedrooms",
-    bathrooms: "2 Bathroom",
-    image: "/apartments/1.png",
-  },
-];
-
 const  Apartments = async() => {
   const listings = await getAllListings("");
   // console.log("all listings", listings)

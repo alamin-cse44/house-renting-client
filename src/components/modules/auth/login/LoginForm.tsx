@@ -1,5 +1,12 @@
-"use client";
+"use client"
 
+
+import { UseFormReturn, useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, Suspense } from "react";
+import { toast } from "sonner";
+import { loginUser, getCurrentUser } from "@/services/AuthService";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,31 +17,53 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { getCurrentUser, loginUser } from "@/services/AuthService";
 import Link from "next/link";
 import { loginSchema } from "./loginValidation";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 
+// Define form field types
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+// Define props type
+interface LoginFormProps {
+  form: UseFormReturn<LoginFormValues>;
+  setUser: Dispatch<SetStateAction<any>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  router: ReturnType<typeof useRouter>;
+}
+
 const LoginForm = () => {
-  const form = useForm({
+  // Explicitly type the useForm hook
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const { setUser, setIsLoading } = useUser();
+  const router = useRouter();
 
+  return (
+    <Suspense fallback={null}>
+      <LoginFormContent form={form} setUser={setUser} setIsLoading={setIsLoading} router={router} />
+    </Suspense>
+  );
+};
+
+const LoginFormContent = ({ form, setUser, setIsLoading, router }: LoginFormProps) => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirectPath");
-  const router = useRouter();
 
   const {
     formState: { isSubmitting },
   } = form;
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
       const res = await loginUser(data);
       const user = await getCurrentUser();
@@ -42,11 +71,7 @@ const LoginForm = () => {
       setIsLoading(false);
       if (res.success) {
         toast.success(res?.message);
-        if (redirectUrl) {
-          router.push(redirectUrl);
-        } else {
-          router.push("/profile");
-        }
+        router.push(redirectUrl || "/profile");
       } else {
         toast.error(res?.message);
       }
@@ -69,11 +94,7 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="test@gmail.com"
-                    {...field}
-                    value={field.value || ""}
-                  />
+                  <Input placeholder="test@gmail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,7 +108,7 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value || ""} />
+                  <Input {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +121,7 @@ const LoginForm = () => {
         </form>
       </Form>
       <p className="text-sm text-gray-600 text-center my-3">
-        Do not have any account ?
+        Do not have any account?{" "}
         <Link href="/register" className="text-primary">
           Register
         </Link>

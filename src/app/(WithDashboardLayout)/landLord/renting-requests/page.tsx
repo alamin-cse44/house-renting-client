@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IRentalRequest } from "@/types";
-import { updateUserRole } from "@/services/AdminService";
 import { toast } from "sonner";
 import {
   getAllTenantRequests,
@@ -62,7 +61,7 @@ const RentingRequestsTable = () => {
     fetchRequests();
   }, [status, pageSize, pageIndex]);
 
-  console.log("requests", requests);
+  // console.log("requests", requests);
 
   // Paginate the data using useMemo
   const paginatedData = useMemo(() => {

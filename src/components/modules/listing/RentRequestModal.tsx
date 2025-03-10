@@ -30,7 +30,6 @@ import { createRentingRequest } from "@/services/RentingService";
 import { IListing,  } from "@/types";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,8 +37,7 @@ import { toast } from "sonner";
 const RentRequestModal = ({ listing }: { listing: IListing }) => {
   const [open, setOpen] = useState(false);
   const form = useForm();
-  const router = useRouter();
-  const { user, setIsLoading } = useUser();
+  const { user } = useUser();
   const {
     formState: { isSubmitting },
   } = form;
