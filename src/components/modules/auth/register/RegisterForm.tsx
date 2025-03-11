@@ -27,6 +27,7 @@ import { useState } from "react";
 import NMImageUploader from "@/components/ui/core/NMImageUploader";
 import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer";
 import { useRouter } from "next/navigation";
+import Shell from "@/components/ui/core/Shell";
 
 const RegisterForm = () => {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
@@ -103,156 +104,158 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5 mx-2 mt-10">
-      <div className="text-center">
-        <h1 className="text-xl font-semibold my-2">Register</h1>
-        <p className="font-extralight text-sm text-gray-600">
-          Join us today and start your journey!
+    <Shell className="my-5">
+      <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5 mt-10">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold my-2">Register</h1>
+          <p className="font-extralight text-sm text-gray-600">
+            Join us today and start your journey!
+          </p>
+        </div>
+        <Form {...form}>
+          <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+            {imagePreview.length > 0 ? (
+              <ImagePreviewer
+                setImageFiles={setImageFiles}
+                imagePreview={imagePreview}
+                setImagePreview={setImagePreview}
+                className="mt-8"
+              />
+            ) : (
+              <div className="mt-8">
+                <NMImageUploader
+                  setImageFiles={setImageFiles}
+                  setImagePreview={setImagePreview}
+                  label="Upload Profile"
+                />
+              </div>
+            )}
+
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Test Name"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="test@gmail.com"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone (+880)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="1643530000"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select User Role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value={"landLord"}>Landlord</SelectItem>
+                      <SelectItem value={"tenant"}>Tenant</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="passwordConfirm"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value || ""} />
+                  </FormControl>
+                  {passwordConfirm && password !== passwordConfirm ? (
+                    <FormMessage>Password does not match!</FormMessage>
+                  ) : (
+                    <FormMessage />
+                  )}
+                </FormItem>
+              )}
+            />
+
+            <Button className="w-full mt-5" type="submit">
+              {isSubmitting ? "Registering..." : "Register"}
+            </Button>
+          </form>
+        </Form>
+        <p className="text-sm text-gray-600 text-center my-3">
+          Already have an account ?
+          <Link href="/login" className="text-primary">
+            Login
+          </Link>
         </p>
       </div>
-      <Form {...form}>
-        <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-          {imagePreview.length > 0 ? (
-            <ImagePreviewer
-              setImageFiles={setImageFiles}
-              imagePreview={imagePreview}
-              setImagePreview={setImagePreview}
-              className="mt-8"
-            />
-          ) : (
-            <div className="mt-8">
-              <NMImageUploader
-                setImageFiles={setImageFiles}
-                setImagePreview={setImagePreview}
-                label="Upload Profile"
-              />
-            </div>
-          )}
-
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Test Name"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="test@gmail.com"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone (+880)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="1643530000"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select User Role" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value={"landLord"}>Landlord</SelectItem>
-                    <SelectItem value={"tenant"}>Tenant</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ""} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="passwordConfirm"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ""} />
-                </FormControl>
-                {passwordConfirm && password !== passwordConfirm ? (
-                  <FormMessage>Password does not match!</FormMessage>
-                ) : (
-                  <FormMessage />
-                )}
-              </FormItem>
-            )}
-          />
-
-          <Button className="w-full mt-5" type="submit">
-            {isSubmitting ? "Registering..." : "Register"}
-          </Button>
-        </form>
-      </Form>
-      <p className="text-sm text-gray-600 text-center my-3">
-        Already have an account ?
-        <Link href="/login" className="text-primary">
-          Login
-        </Link>
-      </p>
-    </div>
+    </Shell>
   );
 };
 

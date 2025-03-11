@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 
 import { UseFormReturn, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { loginSchema } from "./loginValidation";
 import { useUser } from "@/context/UserContext";
+import Shell from "@/components/ui/core/Shell";
 
 // Define form field types
 interface LoginFormValues {
@@ -50,12 +50,22 @@ const LoginForm = () => {
 
   return (
     <Suspense fallback={null}>
-      <LoginFormContent form={form} setUser={setUser} setIsLoading={setIsLoading} router={router} />
+      <LoginFormContent
+        form={form}
+        setUser={setUser}
+        setIsLoading={setIsLoading}
+        router={router}
+      />
     </Suspense>
   );
 };
 
-const LoginFormContent = ({ form, setUser, setIsLoading, router }: LoginFormProps) => {
+const LoginFormContent = ({
+  form,
+  setUser,
+  setIsLoading,
+  router,
+}: LoginFormProps) => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirectPath");
 
@@ -81,52 +91,54 @@ const LoginFormContent = ({ form, setUser, setIsLoading, router }: LoginFormProp
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
-      <div className="text-center">
-        <h1 className="text-xl font-semibold my-2">Login</h1>
+    <Shell>
+      <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold my-2">Login</h1>
+        </div>
+        <Form {...form}>
+          <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="test@gmail.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button className="w-full mt-5" type="submit">
+              {isSubmitting ? "Login..." : "Login"}
+            </Button>
+          </form>
+        </Form>
+        <p className="text-sm text-gray-600 text-center my-3">
+          Do not have any account?{" "}
+          <Link href="/register" className="text-primary">
+            Register
+          </Link>
+        </p>
       </div>
-      <Form {...form}>
-        <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="test@gmail.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input {...field} type="password" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button className="w-full mt-5" type="submit">
-            {isSubmitting ? "Login..." : "Login"}
-          </Button>
-        </form>
-      </Form>
-      <p className="text-sm text-gray-600 text-center my-3">
-        Do not have any account?{" "}
-        <Link href="/register" className="text-primary">
-          Register
-        </Link>
-      </p>
-    </div>
+    </Shell>
   );
 };
 
