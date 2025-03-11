@@ -104,8 +104,8 @@ const RegisterForm = () => {
   };
 
   return (
-    <Shell className="my-5">
-      <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5 mt-10">
+    <Shell className="my-5  flex-grow max-w-md w-full">
+      <div className="border border-gray-300 rounded-xl p-5 mt-10">
         <div className="text-center">
           <h1 className="text-xl font-semibold my-2">Register</h1>
           <p className="font-extralight text-sm text-gray-600">

@@ -91,8 +91,8 @@ const LoginFormContent = ({
   };
 
   return (
-    <Shell>
-      <div className="border border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
+    <Shell className="flex-grow max-w-md w-full">
+      <div className="border border-gray-300 rounded-xl  p-5">
         <div className="text-center">
           <h1 className="text-xl font-semibold my-2">Login</h1>
         </div>
