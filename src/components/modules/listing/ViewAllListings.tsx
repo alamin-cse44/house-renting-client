@@ -66,63 +66,61 @@ const ViewAllListings = () => {
   }, [listings, pageIndex, pageSize]);
 
   return (
-    <>
+    <div className="space-y-10 mb-10">
+      {/* Search & Filter Inputs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <Input
+          placeholder="Search with category, location & title"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Select
+          onValueChange={(value) => setCategory(value === "all" ? "" : value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by Category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem className="cursor-pointer" value="all">
+              All
+            </SelectItem>
+            {listingCategory.map((category) => (
+              <SelectItem
+                key={category.id}
+                className="cursor-pointer"
+                value={category.name}
+              >
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select onValueChange={(value) => setPageSize(Number(value))}>
+          <SelectTrigger>
+            <SelectValue placeholder={`Items view: ${pageSize}`} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem className="cursor-pointer" value="2">
+              2
+            </SelectItem>
+            <SelectItem className="cursor-pointer" value="10">
+              10
+            </SelectItem>
+            <SelectItem className="cursor-pointer" value="20">
+              20
+            </SelectItem>
+            <SelectItem className="cursor-pointer" value="50">
+              50
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {loading ? (
         <h2>Loading....</h2>
       ) : (
-        <div className="space-y-10 mb-10">
-          {/* Search & Filter Inputs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <Input
-              placeholder="Search with category, location & title"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Select
-              onValueChange={(value) =>
-                setCategory(value === "all" ? "" : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem className="cursor-pointer" value="all">
-                  All
-                </SelectItem>
-                {listingCategory.map((category) => (
-                  <SelectItem
-                    key={category.id}
-                    className="cursor-pointer"
-                    value={category.name}
-                  >
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select onValueChange={(value) => setPageSize(Number(value))}>
-              <SelectTrigger>
-                <SelectValue placeholder={`Items view: ${pageSize}`} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem className="cursor-pointer" value="2">
-                  2
-                </SelectItem>
-                <SelectItem className="cursor-pointer" value="10">
-                  10
-                </SelectItem>
-                <SelectItem className="cursor-pointer" value="20">
-                  20
-                </SelectItem>
-                <SelectItem className="cursor-pointer" value="50">
-                  50
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+        <>
           {/* Apartments Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {listings?.map((apartment: IListing) => (
@@ -152,9 +150,9 @@ const ViewAllListings = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 };
 
