@@ -16,7 +16,7 @@ import { useState } from "react";
 const SearchAvailability = () => {
   const [category, setCategory] = useState("");
 
-//   console.log("category", category);
+  //   console.log("category", category);
   return (
     <Shell className="my-16 flex flex-col justify-center items-center">
       {/* Heading */}
@@ -50,7 +50,7 @@ const SearchAvailability = () => {
             ))}
           </SelectContent>
         </Select>
-        <Link href={`/all-listings/available?category=${category}`}>
+        <Link href={`/available-listings?category=${category}`}>
           <Button>View</Button>
         </Link>
       </div>

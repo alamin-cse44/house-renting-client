@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 
 const EditProfileModal = () => {
   const [open, setOpen] = useState(false);
-  const { user } = useUser();
+  const { user, setIsLoading } = useUser();
   const form = useForm({
     resolver: zodResolver(editUserSchema),
   });
@@ -37,7 +37,7 @@ const EditProfileModal = () => {
   } = form;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log("data", data)
+    console.log("data", data);
     const editInfo = {
       name: data?.name ? data.name : user?.name,
       email: data?.email ? data.email : user?.userEmail,
@@ -51,6 +51,7 @@ const EditProfileModal = () => {
         toast.success(res?.message);
         setOpen(false);
         await logout();
+        setIsLoading(true);
         router.push("/login");
       } else {
         toast.error(res?.message);

@@ -32,7 +32,7 @@ const HeroSection = () => {
           we have the right perspective in life, life will always be beautiful!
         </p>
 
-        <Link href={"all-listings"}>
+        <Link href={"/all-listings"}>
           <Button className="text-lg font-semibold mt-6 shadow-lg rounded-full p-6">
             ALL LISTINGS
           </Button>
