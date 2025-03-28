@@ -19,7 +19,7 @@ const ListingCard = ({ listing }: { listing: IListing }) => {
         />
       </div>
       <CardContent className="p-4">
-        <h3 className="text-lg font-semibold">{listing?.apartmentType}</h3>
+        <h3 className="text-md font-semibold">{listing?.apartmentType}</h3>
         <div className="text-sm text-gray-500 flex items-center gap-1 mt-1">
           <ListCollapse className="h-4 w-4 text-gray-400" /> {listing?.category}
         </div>

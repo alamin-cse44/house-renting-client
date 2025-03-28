@@ -43,7 +43,7 @@ const Navbar = () => {
   return (
     <>
       {/* Main Navbar */}
-      <nav className="bg-white shadow-md rounded-xl relative">
+      <nav className="bg-white shadow-md rounded-xl sticky top-0 z-50">
         <div className="flex items-center justify-between px-3 py-1.5 container mx-auto ">
           {/* Left Section - Logo & Mobile Menu Button */}
           <div className="flex items-center space-x-2">

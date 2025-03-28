@@ -19,8 +19,8 @@ const  Apartments = async() => {
       </div>
 
       {/* Apartments Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {listings?.data?.slice(0,4).map((apartment: IListing) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {listings?.data?.slice(0,5).map((apartment: IListing) => (
           <ListingCard listing={apartment} key={apartment?._id} />
         ))}
       </div>
