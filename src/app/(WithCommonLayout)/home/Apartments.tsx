@@ -9,7 +9,7 @@ const  Apartments = async() => {
   const listings = await getAllListings("");
   // console.log("all listings", listings)
   return (
-    <Shell className="my-16">
+    <div className="my-16">
       {/* Heading */}
       <div className="text-center mb-8">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -33,7 +33,7 @@ const  Apartments = async() => {
           </Button>
         </Link>
       </div>
-    </Shell>
+    </div>
   );
 }
 

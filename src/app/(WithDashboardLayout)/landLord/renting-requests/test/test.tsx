@@ -93,7 +93,7 @@ const RentingRequestsTable = () => {
   };
 
   const columns: ColumnDef<IRentalRequest>[] = [
-    { accessorKey: "tenant.name", header: "Tenant", minSize: 200, maxSize: 250},
+    { accessorKey: "tenant.name", header: "Tenant", size: 250 },
     { accessorKey: "tenant.email", header: "Tenant Email" },
     { accessorKey: "listing.category", header: "Apartment Type" },
     { accessorKey: "listing.bedrooms", header: "Bedrooms" },
@@ -175,7 +175,6 @@ const RentingRequestsTable = () => {
     data: paginatedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    columnResizeMode: "onChange"
   });
 
   return (
@@ -212,7 +211,10 @@ const RentingRequestsTable = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} className="border p-2 bg-gray-100">
+                  <th
+                    key={header.id}
+                    className="border p-2 bg-gray-100 min-w-[100px] max-w-[250px]"
+                  >
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -223,20 +225,19 @@ const RentingRequestsTable = () => {
             ))}
           </thead>
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center p-4">
-                  Loading...
-                </td>
-              </tr>
-            ) : table.getRowModel().rows?.length ? (
+          {loading && (
+            <tr>
+              <td colSpan={columns.length} className="text-center p-4">
+                Loading...
+              </td>
+            </tr>
+          )}
+          
+            {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <tr key={row.id} className="border">
                   {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="p-2 border"
-                    >
+                    <td key={cell.id} className="p-2 border">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -247,8 +248,8 @@ const RentingRequestsTable = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length} className="text-center p-4">
-                  No results found.
+                <td colSpan={columns.length} className="text-center p-2">
+                  No results.
                 </td>
               </tr>
             )}

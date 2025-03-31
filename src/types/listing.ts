@@ -6,6 +6,7 @@ export interface IListing {
   landLord: IUserDetails;
   location: string;
   description: string;
+  discount?: string;
   price: number;
   bedrooms: number;
   image: { url: string }[];
@@ -14,4 +15,3 @@ export interface IListing {
   updatedAt: string;
   __v: number;
 }
-
