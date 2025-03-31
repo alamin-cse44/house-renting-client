@@ -4,6 +4,7 @@ import Apartments from "./home/Apartments";
 import ContactSection from "./home/ContactSection";
 import TestimonialSection from "./home/TestimonialSection";
 import SearchAvailability from "./home/SearchAvailability";
+import PosterSection2 from "./home/PosterSection2";
 
 const HomePage = () => {
   return (
@@ -11,6 +12,7 @@ const HomePage = () => {
       <HeroSection />
       <SearchAvailability />
       <Apartments />
+      <PosterSection2 />
       <TestimonialSection />
       <ContactSection />
     </Shell>
