@@ -22,7 +22,7 @@ import { IListing } from "@/types";
 import { deleteListingByAdmin } from "@/services/AdminService";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/DeleteConfirmationModal";
-import { getAllListingsById } from "@/services/ListingService";
+import { deleteListingByLandlord, getAllListingsById } from "@/services/ListingService";
 import Link from "next/link";
 import { listingCategory } from "@/types/object";
 
@@ -89,7 +89,7 @@ const MyListingsTable = () => {
   const handleDeleteConfirm = async () => {
     try {
       if (selectedId) {
-        const res = await deleteListingByAdmin(selectedId);
+        const res = await deleteListingByLandlord(selectedId);
         console.log(res);
         if (res.success) {
           fetchListings();

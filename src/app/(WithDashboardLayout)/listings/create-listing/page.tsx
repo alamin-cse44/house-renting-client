@@ -40,7 +40,7 @@ export default function CreateListingForm() {
   const router = useRouter();
 
   const { user, setIsLoading } = useUser();
-  console.log("user", user);
+  // console.log("user", user);
 
   const {
     formState: { isSubmitting },
@@ -99,15 +99,16 @@ export default function CreateListingForm() {
         landLord: user?.userId,
         price: Number(data?.price),
         bedrooms: Number(data?.bedrooms),
+        discount: Number(data?.discount),
         image: uploadedImages,
       };
 
-      // console.log("modifiedData", modifiedData);
+      console.log("modifiedData", modifiedData);
 
       // Send data to backend
       const res = await createListing(modifiedData);
 
-      console.log(res);
+      // console.log(res);
 
       if (res.success) {
         toast.success(res.message);
@@ -193,37 +194,52 @@ export default function CreateListingForm() {
                   </FormItem>
                 )}
               />
-            </div>
 
-            <div className="mt-4">
               <FormField
                 control={form.control}
-                name="category"
+                name="discount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Listing Category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {listingCategory.map((category) => (
-                          <SelectItem key={category?.id} value={category?.name}>
-                            {category?.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
+                    <FormLabel>Discount</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value || ""} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Listing Category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {listingCategory.map((category) => (
+                            <SelectItem
+                              key={category?.id}
+                              value={category?.name}
+                            >
+                              {category?.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
             </div>
 
             <div className="mt-4">

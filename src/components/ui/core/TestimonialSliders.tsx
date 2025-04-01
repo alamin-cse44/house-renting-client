@@ -41,7 +41,7 @@ const testimonials = [
     id: 5,
     name: "Michael Williams",
     description:
-      "Great experience! I will continue using this service for my projects.",
+      "Great experience! I will continue using this service for my projects & others.",
     tags: ["Project Manager", "Entrepreneur"],
   },
 ];
