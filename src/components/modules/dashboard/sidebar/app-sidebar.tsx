@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { BookDown, ListCollapse, SquareTerminal, Users } from "lucide-react";
+import { BookDown, ListCollapse, ListIcon, SquareTerminal, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -38,6 +38,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "All Listings",
         url: "/listings",
         icon: ListCollapse,
+        isActive: true,
+      },
+      {
+        title: "Categories",
+        url: "/admin/category",
+        icon: ListIcon,
         isActive: true,
       },
       // {

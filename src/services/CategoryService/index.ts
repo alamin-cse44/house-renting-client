@@ -2,16 +2,18 @@
 
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { FieldValues } from "react-hook-form";
 
 // create category
-export const createCategory = async (data: FormData) => {
+export const createCategory = async (data: FieldValues) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/category`, {
       method: "POST",
       headers: {
         Authorization: (await cookies()).get("accessToken")!.value,
+        "Content-Type": "application/json",
       },
-      body: data,
+      body: JSON.stringify(data),
     });
 
     revalidateTag("CATEGORY");
@@ -23,9 +25,9 @@ export const createCategory = async (data: FormData) => {
 };
 
 //get all categories
-export const getAllCategories = async () => {
+export const getAllCategories = async (query: any) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/category`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/category?${query}`, {
       next: {
         tags: ["CATEGORY"],
       },
