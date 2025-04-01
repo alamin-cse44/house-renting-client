@@ -5,6 +5,7 @@ import ContactSection from "./home/ContactSection";
 import TestimonialSection from "./home/TestimonialSection";
 import SearchAvailability from "./home/SearchAvailability";
 import PosterSection2 from "./home/PosterSection2";
+import DiscountedApartmetns from "./home/DiscountedApartmetns";
 
 const HomePage = () => {
   return (
@@ -12,6 +13,7 @@ const HomePage = () => {
       <HeroSection />
       <SearchAvailability />
       <Apartments />
+      <DiscountedApartmetns />
       <PosterSection2 />
       <TestimonialSection />
       <ContactSection />
