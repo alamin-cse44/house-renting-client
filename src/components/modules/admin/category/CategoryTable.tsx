@@ -27,7 +27,7 @@ import { deleteCategory, getAllCategories } from "@/services/CategoryService";
 
 const CategoryTable = () => {
   const router = useRouter();
-  const [skills, setSkills] = useState<ICategory[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [search, setSearch] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -37,7 +37,7 @@ const CategoryTable = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
-  const fetchSkills = async () => {
+  const fetchCategories = async () => {
     setLoading(true); // Show loader before fetching
 
     try {
@@ -54,26 +54,26 @@ const CategoryTable = () => {
       if (!res) throw new Error("Failed to fetch skills");
       console.log(res);
 
-      setSkills(res?.data);
+      setCategories(res?.data);
     } catch (error) {
-      console.error("Error fetching skills:", error);
+      console.error("Error fetching Categories:", error);
     } finally {
       setLoading(false); // Hide loader after fetching
     }
   };
   // Fetch users
   useEffect(() => {
-    fetchSkills();
+    fetchCategories();
   }, [search, pageSize, pageIndex]);
 
-  console.log("users", skills);
+  console.log("categories", categories);
 
   // Paginate the data using useMemo
   const paginatedData = useMemo(() => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
-    return skills.slice(start, end);
-  }, [skills, pageIndex, pageSize]);
+    return categories.slice(start, end);
+  }, [categories, pageIndex, pageSize]);
 
   // Handle delete
   const handleDelete = async (data: ICategory) => {
@@ -89,7 +89,7 @@ const CategoryTable = () => {
         const res = await deleteCategory(selectedId);
         console.log(res);
         if (res.success) {
-          fetchSkills();
+          fetchCategories();
           toast.success(res.message);
           setModalOpen(false);
         } else {
@@ -143,13 +143,13 @@ const CategoryTable = () => {
   return (
     <div className="space-y-4 mt-10 max-w-2xl min-w-[600]">
       {/* Search & Filter Inputs */}
-      <div className="max-w-md">
+      {/* <div className="max-w-md">
         <Input
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="overflow-x-auto">
@@ -225,10 +225,10 @@ const CategoryTable = () => {
             Prev
           </Button>
           <span className="mx-4">
-            Page {pageIndex + 1} of {Math.ceil(skills?.length / pageSize)}
+            Page {pageIndex + 1} of {Math.ceil(categories?.length / pageSize)}
           </span>
           <Button
-            disabled={(pageIndex + 1) * pageSize >= skills?.length}
+            disabled={(pageIndex + 1) * pageSize >= categories?.length}
             onClick={() => setPageIndex((prev) => prev + 1)}
           >
             Next
