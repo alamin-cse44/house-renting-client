@@ -88,13 +88,6 @@ const Navbar = () => {
 
           {/* Right Section - Cart, Bell, Login, Avatar */}
           <div className="flex items-center space-x-4">
-            <div className="relative hidden md:block">
-              <Input
-                type="text"
-                placeholder="Search"
-                className="w-40 md:w-52"
-              />
-            </div>
 
             {!user ? (
               <Link href={"/login"}>
@@ -102,21 +95,13 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                <div className="relative">
-                  <ShoppingCart className="text-gray-600 cursor-pointer" />
-                  {cartQuantity > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
-                      {cartQuantity}
-                    </span>
-                  )}
-                </div>
                 <Popover>
                   <PopoverTrigger>
                     <Avatar>
                       <AvatarImage src={user?.image} alt="@shadcn" />
                     </Avatar>
                   </PopoverTrigger>
-                  <PopoverContent className="w-48 p-2 bg-white shadow-md rounded-md">
+                  <PopoverContent align="end" className="w-48 p-2 bg-white shadow-md rounded-md">
                     <Link href={"/profile"}>
                       <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                         Profile
