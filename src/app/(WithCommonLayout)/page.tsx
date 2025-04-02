@@ -6,12 +6,14 @@ import TestimonialSection from "./home/TestimonialSection";
 import SearchAvailability from "./home/SearchAvailability";
 import PosterSection2 from "./home/PosterSection2";
 import DiscountedApartmetns from "./home/DiscountedApartmetns";
+import HomeCategories from "./home/HomeCategories";
 
 const HomePage = () => {
   return (
     <Shell className="mt-2">
       <HeroSection />
       <SearchAvailability />
+      <HomeCategories />
       <Apartments />
       <DiscountedApartmetns />
       <PosterSection2 />

@@ -40,7 +40,7 @@ const ListingCard = ({ listing }: { listing: IListing }) => {
         <div className="flex justify-between items-center mt-4">
           <div className="flex items-center gap-2">
             <p className="text-lg font-bold">Tk {listing?.price}</p>
-            { listing?.discount > 0 && <p className="text-sm text-gray-500 line-through">${listing?.price + listing?.discount}</p>}
+            { listing?.discount > 0 && <p className="text-sm text-gray-500 line-through">TK{listing?.price + listing?.discount}</p>}
           </div>
           <div className="flex items-center gap-2 text-gray-500">
             <Share2 className="h-5 w-5 cursor-pointer hover:text-gray-700" />
