@@ -7,12 +7,14 @@ import SearchAvailability from "./home/SearchAvailability";
 import PosterSection2 from "./home/PosterSection2";
 import DiscountedApartmetns from "./home/DiscountedApartmetns";
 import HomeCategories from "./home/HomeCategories";
+import Poster from "./home/Poster";
 
 const HomePage = () => {
   return (
     <Shell className="mt-2">
-      <HeroSection />
-      <SearchAvailability />
+      <Poster />
+      {/* <HeroSection />
+      <SearchAvailability /> */}
       <HomeCategories />
       <Apartments />
       <DiscountedApartmetns />

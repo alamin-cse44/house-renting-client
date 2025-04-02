@@ -34,7 +34,7 @@ const categories = [
 
 export default function HomeCategories() {
   return (
-    <div className="p-6">
+    <div className="mt-16">
       <h2 className="text-xl font-semibold mb-4">Browse Categories</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {categories.map((category, index) => (
