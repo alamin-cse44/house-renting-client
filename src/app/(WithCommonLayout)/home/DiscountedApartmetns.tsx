@@ -5,7 +5,8 @@ import { getAllListings } from "@/services/ListingService";
 import { IListing } from "@/types";
 
 const DiscountedApartmetns = async () => {
-  const listings = await getAllListings({"limit": "100"});
+  
+  const listings = await getAllListings("limit=100");
   console.log("all listings", listings)
   return (
     <div className="my-16">
