@@ -1,4 +1,5 @@
 import Gallery from "@/components/modules/listing/Gallery";
+import RelatedListings from "@/components/modules/listing/RelatedListings";
 import RentRequestForm from "@/components/modules/listing/RentRequestModal";
 import Shell from "@/components/ui/core/Shell";
 import { getSingleListingByLandlord } from "@/services/ListingService";
@@ -11,7 +12,6 @@ const ListingDetailsPage = async ({
   const { listingId } = await params;
 
   const listing = await getSingleListingByLandlord(listingId);
-
 
   return (
     <Shell className="mt-10">
@@ -28,10 +28,12 @@ const ListingDetailsPage = async ({
         {/* Right Side - Form */}
         <div className="bg-white shadow-lg rounded-lg p-6 border w-full h-48 max-w-md">
           <h3 className="text-lg font-semibold mb-4">Book This Apartment</h3>
-          
+
           <RentRequestForm listing={listing?.data} />
         </div>
       </div>
+
+      <RelatedListings category={listing?.data?.category}/>
     </Shell>
   );
 };
