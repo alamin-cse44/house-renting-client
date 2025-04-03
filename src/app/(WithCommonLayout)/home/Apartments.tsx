@@ -4,7 +4,7 @@ import ListingCard from "@/components/ui/core/ListingCard";
 import { getAllListings } from "@/services/ListingService";
 import { IListing } from "@/types";
 
-const  Apartments = async() => {
+const Apartments = async () => {
   const listings = await getAllListings("");
   // console.log("all listings", listings)
   return (
@@ -18,8 +18,8 @@ const  Apartments = async() => {
       </div>
 
       {/* Apartments Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {listings?.data?.slice(0,5).map((apartment: IListing) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+        {listings?.data?.slice(0, 5).map((apartment: IListing) => (
           <ListingCard listing={apartment} key={apartment?._id} />
         ))}
       </div>
@@ -34,7 +34,6 @@ const  Apartments = async() => {
       </div>
     </div>
   );
-}
-
+};
 
 export default Apartments;
