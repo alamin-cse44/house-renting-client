@@ -51,7 +51,7 @@ const AvailableListings = () => {
         <h2>Loading....</h2>
       ) : (
         <div className="space-y-10 mb-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
             {listings?.map((apartment) => (
               <ListingCard listing={apartment} key={apartment?._id} />
             ))}

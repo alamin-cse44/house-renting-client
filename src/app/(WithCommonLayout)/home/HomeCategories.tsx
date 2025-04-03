@@ -38,11 +38,11 @@ export default function HomeCategories() {
       <h2 className="text-xl font-semibold mb-4">Browse Categories</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {categories.map((category, index) => (
-          <Link href={`/available-listings?category=${category.href}`}>
-            <div
-              key={index}
-              className="flex flex-col items-center p-4 bg-white shadow-md rounded-xl hover:bg-gray-100 transition duration-200 cursor-pointer"
-            >
+          <Link
+            key={index}
+            href={`/available-listings?category=${category.href}`}
+          >
+            <div className="flex flex-col items-center p-4 bg-white shadow-md rounded-xl hover:bg-gray-100 transition duration-200 cursor-pointer">
               {category.icon}
               <p className="mt-2 text-sm font-medium">{category.name}</p>
             </div>
