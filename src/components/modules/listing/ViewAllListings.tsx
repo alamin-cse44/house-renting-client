@@ -22,7 +22,7 @@ const ViewAllListings = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [pageSize, setPageSize] = useState(10);
-  const [pageIndex, setPageIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(1);
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
 
@@ -134,16 +134,17 @@ const ViewAllListings = () => {
 
             <div>
               <Button
-                disabled={pageIndex === 0}
+                disabled={pageIndex === 1}
                 onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
               >
                 Prev
               </Button>
               <span className="mx-4">
-                Page {pageIndex + 1} of {Math.ceil(listings?.length / pageSize)}
+                Page {pageIndex}
+                {/* of {Math.ceil(listings?.length / pageSize)} */}
               </span>
               <Button
-                disabled={(pageIndex + 1) * pageSize >= listings?.length}
+                disabled={listings?.length < 10}
                 onClick={() => setPageIndex((prev) => prev + 1)}
               >
                 Next
