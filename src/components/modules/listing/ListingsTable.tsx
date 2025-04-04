@@ -81,7 +81,7 @@ const ListingsTable = () => {
   // Handle delete
   const handleDelete = async (data: IListing) => {
     // console.log(data);
-    if(listings?.length <= 7){
+    if (listings?.length <= 7) {
       toast.error("Cannot delete! Please Add one or more!!");
       return;
     }
@@ -114,24 +114,6 @@ const ListingsTable = () => {
     { accessorKey: "location", header: "Location" },
     { accessorKey: "price", header: "Price" },
     { accessorKey: "bedrooms", header: "Bedrooms" },
-    // {
-    //   accessorKey: "role",
-    //   header: "Role",
-    //   cell: ({ row }) => (
-    //     <Select
-    //       onValueChange={(value) => handleUpdateRole(row.original._id, value)}
-    //     >
-    //       <SelectTrigger>
-    //         <SelectValue placeholder={row.original.role} />
-    //       </SelectTrigger>
-    //       <SelectContent>
-    //         <SelectItem value="admin">Admin</SelectItem>
-    //         <SelectItem value="landLord">LandLord</SelectItem>
-    //         <SelectItem value="tenant">Tenant</SelectItem>
-    //       </SelectContent>
-    //     </Select>
-    //   ),
-    // },
     {
       accessorKey: "action",
       header: "Action",
@@ -276,22 +258,27 @@ const ListingsTable = () => {
           </Select>
         </div>
 
-        <div>
-          <Button
-            disabled={pageIndex === 0}
-            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
-          >
-            Prev
-          </Button>
-          <span className="mx-4">
-            Page {pageIndex + 1} of {Math.ceil(listings?.length / pageSize)}
-          </span>
-          <Button
-            disabled={(pageIndex + 1) * pageSize >= listings?.length}
-            onClick={() => setPageIndex((prev) => prev + 1)}
-          >
-            Next
-          </Button>
+        <div className="flex justify-between items-center mb-4 ">
+          <div></div>
+
+          <div>
+            <Button
+              disabled={pageIndex === 0}
+              onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
+            >
+              Prev
+            </Button>
+            <span className="mx-4">
+              Page {pageIndex+1}
+              {/* of {Math.ceil(listings?.length / pageSize)} */}
+            </span>
+            <Button
+              disabled={listings?.length < 10}
+              onClick={() => setPageIndex((prev) => prev + 1)}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
       <DeleteConfirmationModal

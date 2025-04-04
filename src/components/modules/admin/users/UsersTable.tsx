@@ -303,22 +303,27 @@ const UsersTable = () => {
           </Select>
         </div>
 
-        <div>
-          <Button
-            disabled={pageIndex === 0}
-            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
-          >
-            Prev
-          </Button>
-          <span className="mx-4">
-            Page {pageIndex + 1} of {Math.ceil(users?.length / pageSize)}
-          </span>
-          <Button
-            disabled={(pageIndex + 1) * pageSize >= users?.length}
-            onClick={() => setPageIndex((prev) => prev + 1)}
-          >
-            Next
-          </Button>
+        <div className="flex justify-between items-center mb-4 ">
+          <div></div>
+
+          <div>
+            <Button
+              disabled={pageIndex === 0}
+              onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
+            >
+              Prev
+            </Button>
+            <span className="mx-4">
+              Page {pageIndex}
+              {/* of {Math.ceil(listings?.length / pageSize)} */}
+            </span>
+            <Button
+              disabled={users?.length < 10}
+              onClick={() => setPageIndex((prev) => prev + 1)}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
       <DeleteConfirmationModal
