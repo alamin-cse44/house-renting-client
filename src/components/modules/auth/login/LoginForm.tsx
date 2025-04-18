@@ -181,9 +181,11 @@ const LoginFormContent = ({
           </Link>
         </p>
 
-        <Button className="w-full mt-5 bg-black hover:bg-black" type="submit">
-          GO BACK TO THE HOME PAGE
-        </Button>
+        <Link href="/">
+          <Button className="w-full mt-5 bg-black hover:bg-black" type="submit">
+            GO BACK TO THE HOME PAGE
+          </Button>
+        </Link>
       </div>
     </Shell>
   );
