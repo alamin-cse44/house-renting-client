@@ -3,7 +3,7 @@
 import { UseFormReturn, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, Suspense } from "react";
+import { Dispatch, SetStateAction, Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { loginUser, getCurrentUser } from "@/services/AuthService";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,21 @@ interface LoginFormProps {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   router: ReturnType<typeof useRouter>;
 }
+
+const userCredentials = {
+  admin: {
+    email: "alamin23712@gmail.com",
+    password: "pass1234",
+  },
+  landLord: {
+    email: "shafin@gmail.com",
+    password: "12345678",
+  },
+  tenant: {
+    email: "polash@gmail.com",
+    password: "12345678",
+  },
+};
 
 const LoginForm = () => {
   // Explicitly type the useForm hook
@@ -66,12 +81,21 @@ const LoginFormContent = ({
   setIsLoading,
   router,
 }: LoginFormProps) => {
+  const [role, setRole] = useState<"admin" | "landLord" | "tenant">("admin");
+
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirectPath");
 
   const {
     formState: { isSubmitting },
   } = form;
+
+  // Set default values when role changes
+  useEffect(() => {
+    const { email, password } = userCredentials[role];
+    form.setValue("email", email);
+    form.setValue("password", password);
+  }, [role, form]);
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
@@ -92,10 +116,28 @@ const LoginFormContent = ({
 
   return (
     <Shell className="flex-grow max-w-md w-full">
-      <div className="border border-gray-300 rounded-xl  p-5">
+      <div className="border border-gray-300 rounded-xl p-5">
         <div className="text-center">
           <h1 className="text-xl font-semibold my-2">Login</h1>
         </div>
+
+        {/* Radio Buttons */}
+        <div className="flex justify-center gap-4 mb-4">
+          {["admin", "landLord", "tenant"].map((type) => (
+            <label key={type} className="flex items-center gap-1 text-sm">
+              <input
+                type="radio"
+                name="userRole"
+                value={type}
+                checked={role === type}
+                onChange={() => setRole(type as any)}
+              />
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </label>
+          ))}
+        </div>
+
+        {/* Form */}
         <Form {...form}>
           <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -131,12 +173,17 @@ const LoginFormContent = ({
             </Button>
           </form>
         </Form>
+
         <p className="text-sm text-gray-600 text-center my-3">
           Do not have any account?{" "}
           <Link href="/register" className="text-primary">
             Register
           </Link>
         </p>
+
+        <Button className="w-full mt-5 bg-black hover:bg-black" type="submit">
+          GO BACK TO THE HOME PAGE
+        </Button>
       </div>
     </Shell>
   );
